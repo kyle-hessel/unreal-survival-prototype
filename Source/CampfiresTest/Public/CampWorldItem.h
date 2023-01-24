@@ -16,9 +16,6 @@ UCLASS()
 class CAMPFIRESTEST_API ACampWorldItem : public AActor, public ICampInteractionInterface  //CampWorldItem is only an interactable.
 {
 	GENERATED_BODY()
-
-	// Implementation of ICampInteractionInterface's Interact function. '_Implementation' is a result of BlueprintNativeEvent.
-	void Interact_Implementation(APawn* InstigatorPawn) override;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -67,6 +64,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Implementation of ICampInteractionInterface's Interact function. '_Implementation' is a result of BlueprintNativeEvent.
+	void Interact_Implementation(APawn* InstigatorPawn) override;
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

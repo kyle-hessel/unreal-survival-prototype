@@ -24,7 +24,7 @@ ACampGameModeBase::ACampGameModeBase()
 
 void ACampGameModeBase::PopulateItemsDataTable() const
 {
-	// Populate default row item struct
+	// First row item struct (0)
 	FItemStruct DefaultRowItem;
 	DefaultRowItem.DisplayName = FText::FromString("Default World Item");
 	DefaultRowItem.DisplayDescription = FText::FromString("Pseudo-item.");
@@ -43,7 +43,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	Items->AddRow(FName(TEXT("Default")), DefaultRowItem);
 
 		
-	// Second row item struct
+	// Second row item struct (1)
 	FItemStruct SecondRowItem;
 	SecondRowItem.DisplayName = FText::FromString("Wood");
 	SecondRowItem.DisplayDescription = FText::FromString("Useful for constructing objects, and as fuel for a campfire.");
@@ -56,7 +56,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 
 	Items->AddRow(FName(TEXT("Wood")), SecondRowItem);
 
-	// Third row item struct
+	// Third row item struct (2)
 	FItemStruct ThirdRowItem;
 	ThirdRowItem.DisplayName = FText::FromString("Stone");
 	ThirdRowItem.DisplayDescription = FText::FromString("Useful for constructing objects, such as fire pits.");
@@ -69,7 +69,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 
 	Items->AddRow(FName(TEXT("Stone")), ThirdRowItem);
 	
-	// Fourth
+	// Fourth (3)
 	FItemStruct FourthRowItem;
 	FourthRowItem.DisplayName = FText::FromString("Cloth");
 	FourthRowItem.DisplayDescription = FText::FromString("Useful for constructing objects, such as tents.");
@@ -81,5 +81,57 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	FourthRowItem.ItemType = EItemType::ITEM_Resource;
 
 	Items->AddRow(FName(TEXT("Cloth")), FourthRowItem);
+
+	// Fifth (4)
+	FItemStruct FifthRowItem;
+	FifthRowItem.DisplayName = FText::FromString("Bench");
+	FifthRowItem.DisplayDescription = FText::FromString("You can sit on it!");
+	static ConstructorHelpers::FObjectFinder<UTexture2D> FifthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/FWB-tVMWQAEyh86.FWB-tVMWQAEyh86'"));
+	if (FifthItemIcon.Succeeded()) FifthRowItem.Thumbnail = FifthItemIcon.Object;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FifthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Backpack.Backpack'"));
+	if (FifthStaticMesh.Succeeded()) FifthRowItem.Mesh = FifthStaticMesh.Object;
+	FifthRowItem.bIsStackable = false;
+	FifthRowItem.ItemType = EItemType::ITEM_Tool;
+
+	Items->AddRow(FName(TEXT("Bench")), FifthRowItem);
+
+	// Sixth (5)
+	FItemStruct SixthRowItem;
+	SixthRowItem.DisplayName = FText::FromString("Tent");
+	SixthRowItem.DisplayDescription = FText::FromString("You can safely sleep in it!");
+	static ConstructorHelpers::FObjectFinder<UTexture2D> SixthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/Untitled.Untitled'"));
+	if (SixthItemIcon.Succeeded()) SixthRowItem.Thumbnail = SixthItemIcon.Object;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SixthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Campfire.Campfire'"));
+	if (SixthStaticMesh.Succeeded()) SixthRowItem.Mesh = SixthStaticMesh.Object;
+	SixthRowItem.bIsStackable = false;
+	SixthRowItem.ItemType = EItemType::ITEM_Tool;
+
+	Items->AddRow(TEXT("Tent"), SixthRowItem);
+
+	// Seventh (6)
+	FItemStruct SeventhRowItem;
+	SeventhRowItem.DisplayName = FText::FromString("Trunk");
+	SeventhRowItem.DisplayDescription = FText::FromString("You can store things in it!");
+	static ConstructorHelpers::FObjectFinder<UTexture2D> SeventhItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/prof_cropped.prof_cropped'"));
+	if (SeventhItemIcon.Succeeded()) SeventhRowItem.Thumbnail = SeventhItemIcon.Object;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SeventhStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Backpack.Backpack'"));
+	if (SeventhStaticMesh.Succeeded()) SeventhRowItem.Mesh = SeventhStaticMesh.Object;
+	SeventhRowItem.bIsStackable = false;
+	SeventhRowItem.ItemType = EItemType::ITEM_Tool;
+
+	Items->AddRow(TEXT("Trunk"), SeventhRowItem);
+
+	// Eighth (7)
+	FItemStruct EighthRowItem;
+	EighthRowItem.DisplayName = FText::FromString("Firepit");
+	EighthRowItem.DisplayDescription = FText::FromString("You can light fires here. Careful, it gets hot!");
+	static ConstructorHelpers::FObjectFinder<UTexture2D> EighthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/itme.itme'"));
+	if (EighthItemIcon.Succeeded()) EighthRowItem.Thumbnail = EighthItemIcon.Object;
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> EighthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Campfire.Campfire'"));
+	if (EighthStaticMesh.Succeeded()) EighthRowItem.Mesh = EighthStaticMesh.Object;
+	EighthRowItem.bIsStackable = false;
+	EighthRowItem.ItemType = EItemType::ITEM_Tool;
+
+	Items->AddRow(TEXT("Firepit"), EighthRowItem);
 	
 }
