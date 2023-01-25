@@ -4,20 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "MyCampWorldUtilityItem.h"
-#include "CampItemBench.generated.h"
+#include "CampItemTent.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CAMPFIRESTEST_API ACampItemBench : public AMyCampWorldUtilityItem
+class CAMPFIRESTEST_API ACampItemTent : public AMyCampWorldUtilityItem
 {
 	GENERATED_BODY()
 
 public:
-	ACampItemBench();
+	ACampItemTent();
 
 protected:
 	// Override of parent function in ACampWorldUtilityItem, itself inheriting up the tree from an interface.
 	void Interact_Implementation(APawn* InstigatorPawn) override;
+	
 };

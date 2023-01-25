@@ -92,6 +92,8 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	if (FifthStaticMesh.Succeeded()) FifthRowItem.Mesh = FifthStaticMesh.Object;
 	FifthRowItem.bIsStackable = false;
 	FifthRowItem.ItemType = EItemType::ITEM_Tool;
+	FifthRowItem.bCraftable = true;
+	FifthRowItem.IngredientsToCraft.Add(FName(TEXT("Wood")), 4);
 
 	Items->AddRow(FName(TEXT("Bench")), FifthRowItem);
 
@@ -105,6 +107,9 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	if (SixthStaticMesh.Succeeded()) SixthRowItem.Mesh = SixthStaticMesh.Object;
 	SixthRowItem.bIsStackable = false;
 	SixthRowItem.ItemType = EItemType::ITEM_Tool;
+	SixthRowItem.bCraftable = true;
+	SixthRowItem.IngredientsToCraft.Add(FName(TEXT("Wood")), 2);
+	SixthRowItem.IngredientsToCraft.Add(FName(TEXT("Cloth")), 3);
 
 	Items->AddRow(TEXT("Tent"), SixthRowItem);
 
@@ -118,6 +123,9 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	if (SeventhStaticMesh.Succeeded()) SeventhRowItem.Mesh = SeventhStaticMesh.Object;
 	SeventhRowItem.bIsStackable = false;
 	SeventhRowItem.ItemType = EItemType::ITEM_Tool;
+	SeventhRowItem.bCraftable = true;
+	SeventhRowItem.IngredientsToCraft.Add(FName(TEXT("Wood")), 3);
+	SeventhRowItem.IngredientsToCraft.Add(FName(TEXT("Stone")), 1);
 
 	Items->AddRow(TEXT("Trunk"), SeventhRowItem);
 
@@ -131,6 +139,8 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	if (EighthStaticMesh.Succeeded()) EighthRowItem.Mesh = EighthStaticMesh.Object;
 	EighthRowItem.bIsStackable = false;
 	EighthRowItem.ItemType = EItemType::ITEM_Tool;
+	EighthRowItem.bCraftable = true;
+	EighthRowItem.IngredientsToCraft.Add(FName(TEXT("Stone")), 6);
 
 	Items->AddRow(TEXT("Firepit"), EighthRowItem);
 	

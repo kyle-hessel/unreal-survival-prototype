@@ -263,6 +263,8 @@ bool UCampInventoryComponent::SpawnItem(FName ItemName)
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		// Spawn the item back on the ground.
+		// Need to add a switch statement here for item names; a few specific items should spawn their special class type, and everything else can spawn ACampWorldItem.
+		// Everything below these two lines should be fine.
 		ACampWorldItem* SpawnedItem;
 		SpawnedItem = GetWorld()->SpawnActor<ACampWorldItem>(ACampWorldItem::StaticClass(), SpawnTransform, SpawnParams);
 
@@ -278,6 +280,7 @@ bool UCampInventoryComponent::SpawnItem(FName ItemName)
 		// SpawnedItem->SetMaterial() // This or SetMaterialByName will likely be necessary later.
 
 		// Adjust the height of the mesh so it doesn't go into the ground.
+		// Pull some logic here that is similar to how CampCampsite originally created campsites: check nearby landscape relative to bounding box size, and change the item's angle on terrain.
 		FVector OriginalActorLocation = SpawnedItem->GetActorLocation();
 		FVector HeightAdjustment = SpawnedItem->Item->GetStaticMesh()->GetBoundingBox().GetSize();
 

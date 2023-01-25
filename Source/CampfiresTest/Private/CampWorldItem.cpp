@@ -27,6 +27,7 @@ ACampWorldItem::ACampWorldItem()
 	EnergyDelta = 0.0f;
 	bLifeForceItem = false;
 	LifeForceDelta = 0.0f;
+	bCraftable = false;
 
 	// This determines which row in our data table we use, which determines which item this will be! Set in blueprint or defaults to 0.
 	WorldItemIdentifier = 0;
@@ -51,6 +52,8 @@ void ACampWorldItem::BeginPlay()
 	EnergyDelta = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->EnergyDelta;
 	bLifeForceItem = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->bLifeForceItem;
 	LifeForceDelta = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->LifeForceDelta;
+	bCraftable = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->bCraftable;
+	if (bCraftable) IngredientsToCraft = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->IngredientsToCraft;
 }
 
 

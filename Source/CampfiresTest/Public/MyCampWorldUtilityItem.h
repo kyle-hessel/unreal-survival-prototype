@@ -6,8 +6,6 @@
 #include "CampWorldItem.h"
 #include "MyCampWorldUtilityItem.generated.h"
 
-class UUserWidget;
-
 /**
  * 
  */
@@ -19,12 +17,10 @@ class CAMPFIRESTEST_API AMyCampWorldUtilityItem : public ACampWorldItem
 public:
 	AMyCampWorldUtilityItem();
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Crafting")
-	TMap<FName, int32> IngredientsToCraft;
-
 protected:
 	virtual void BeginPlay() override;
 
+	// Meant to be overwritten in blueprint by child classes, even if they are child BPs of child C++ classes to this class (e.g. CampItemTent -> BP_TentItem)
 	UFUNCTION(BlueprintNativeEvent, Category = "Interact")
 	void SpawnInteractMenu(APawn* InstigatorPawn);
 

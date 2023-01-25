@@ -838,8 +838,12 @@ void ACampCharacter::PlaceItem()
 {
 	if (InventoryComp->bIsOpen == false)
 	{
-		// *** May need refactoring later if there are other placeable items: perhaps an inventory system selection could decide what we are placing. Sleeping bags could be one such example.
-		if (JumpTimer <= 0.0f) CreateCampsite();
+		if (JumpTimer <= 0.0f)
+		{
+			//CreateCampsite();
+
+			// This function should soon open an item creation context menu.
+		}
 	}
 }
 

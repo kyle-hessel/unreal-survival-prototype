@@ -58,6 +58,12 @@ struct FItemStruct : public FTableRowBase // Derive from FTableRowBase to make t
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item | Attributes")
 	float LifeForceDelta;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item | Attributes")
+	bool bCraftable;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item | Crafting")
+	TMap<FName, int32> IngredientsToCraft;
+
 	// Struct defaults for members.
 	FItemStruct()
 	{
@@ -71,6 +77,7 @@ struct FItemStruct : public FTableRowBase // Derive from FTableRowBase to make t
 		bLifeForceItem = false;
 		EnergyDelta = 0.0f;
 		LifeForceDelta = 0.0f;
+		bCraftable = false;
 	}
 	
 };
