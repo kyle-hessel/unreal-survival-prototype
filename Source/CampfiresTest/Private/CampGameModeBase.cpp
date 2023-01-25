@@ -26,6 +26,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 {
 	// First row item struct (0)
 	FItemStruct DefaultRowItem;
+	DefaultRowItem.ItemID = 0;
 	DefaultRowItem.DisplayName = FText::FromString("Default World Item");
 	DefaultRowItem.DisplayDescription = FText::FromString("Pseudo-item.");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> DefaultItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/7a4cc3c2b36f4b01ed6b90f7eed4ebb5.7a4cc3c2b36f4b01ed6b90f7eed4ebb5'"));
@@ -45,6 +46,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 		
 	// Second row item struct (1)
 	FItemStruct SecondRowItem;
+	SecondRowItem.ItemID = 1;
 	SecondRowItem.DisplayName = FText::FromString("Wood");
 	SecondRowItem.DisplayDescription = FText::FromString("Useful for constructing objects, and as fuel for a campfire.");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> SecondItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/65272156.65272156'"));
@@ -58,6 +60,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 
 	// Third row item struct (2)
 	FItemStruct ThirdRowItem;
+	ThirdRowItem.ItemID = 2;
 	ThirdRowItem.DisplayName = FText::FromString("Stone");
 	ThirdRowItem.DisplayDescription = FText::FromString("Useful for constructing objects, such as fire pits.");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> ThirdItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/kyle-hessel-self-portrait.kyle-hessel-self-portrait'"));
@@ -71,6 +74,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	
 	// Fourth (3)
 	FItemStruct FourthRowItem;
+	FourthRowItem.ItemID = 3;
 	FourthRowItem.DisplayName = FText::FromString("Cloth");
 	FourthRowItem.DisplayDescription = FText::FromString("Useful for constructing objects, such as tents.");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> FourthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/prof_crop2.prof_crop2'"));
@@ -84,6 +88,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 
 	// Fifth (4)
 	FItemStruct FifthRowItem;
+	FifthRowItem.ItemID = 4;
 	FifthRowItem.DisplayName = FText::FromString("Bench");
 	FifthRowItem.DisplayDescription = FText::FromString("You can sit on it!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> FifthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/FWB-tVMWQAEyh86.FWB-tVMWQAEyh86'"));
@@ -99,6 +104,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 
 	// Sixth (5)
 	FItemStruct SixthRowItem;
+	SixthRowItem.ItemID = 5;
 	SixthRowItem.DisplayName = FText::FromString("Tent");
 	SixthRowItem.DisplayDescription = FText::FromString("You can safely sleep in it!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> SixthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/Untitled.Untitled'"));
@@ -115,6 +121,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 
 	// Seventh (6)
 	FItemStruct SeventhRowItem;
+	SeventhRowItem.ItemID = 6;
 	SeventhRowItem.DisplayName = FText::FromString("Trunk");
 	SeventhRowItem.DisplayDescription = FText::FromString("You can store things in it!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> SeventhItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/prof_cropped.prof_cropped'"));
@@ -131,6 +138,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 
 	// Eighth (7)
 	FItemStruct EighthRowItem;
+	EighthRowItem.ItemID = 7;
 	EighthRowItem.DisplayName = FText::FromString("Firepit");
 	EighthRowItem.DisplayDescription = FText::FromString("You can light fires here. Careful, it gets hot!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> EighthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/itme.itme'"));

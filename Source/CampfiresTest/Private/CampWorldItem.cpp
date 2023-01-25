@@ -14,14 +14,16 @@ ACampWorldItem::ACampWorldItem()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Item = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item"));
-	Item->SetCollisionObjectType(ECC_WorldStatic);
+	Item->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	Item->SetCollisionObjectType(ECC_GameTraceChannel4);
 	Item->SetCollisionResponseToAllChannels(ECR_Overlap);
-	//Item->SetCollisionResponseToChannel()
+	Item->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Ignore);
 	SetRootComponent(Item);
 
 	// Set world item defaults, change these per-item in blueprint as necessary.
 	bIsHoldable = true;
 
+	ItemID = 0;
 	ItemType = EItemType::ITEM_FoodRaw;
 	bEnergyItem = false;
 	EnergyDelta = 0.0f;
@@ -41,19 +43,21 @@ void ACampWorldItem::BeginPlay()
 	
 	// Set item parameters fetched from the Items data table.
 	TArray<FName> RowNames = Items->GetRowNames();
+	const FItemStruct* NewItemData = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Create", true);
 	WorldItemName = RowNames[WorldItemIdentifier]; // For actual item identification when adding to inventory.
-	DisplayName = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->DisplayName; // For UI
-	DisplayDescription = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->DisplayDescription; // For UI
-	bIsStackable = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->bIsStackable;
-	Item->SetStaticMesh(Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->Mesh);
+	ItemID = NewItemData->ItemID;
+	DisplayName = NewItemData->DisplayName; // For UI
+	DisplayDescription = NewItemData->DisplayDescription; // For UI
+	bIsStackable = NewItemData->bIsStackable;
+	Item->SetStaticMesh(NewItemData->Mesh);
 	// Item->SetMaterial() // This or SetMaterialByName will likely be necessary later.
-	ItemType = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->ItemType;
-	bEnergyItem = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->bEnergyItem;
-	EnergyDelta = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->EnergyDelta;
-	bLifeForceItem = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->bLifeForceItem;
-	LifeForceDelta = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->LifeForceDelta;
-	bCraftable = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->bCraftable;
-	if (bCraftable) IngredientsToCraft = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Find", true)->IngredientsToCraft;
+	ItemType = NewItemData->ItemType;
+	bEnergyItem = NewItemData->bEnergyItem;
+	EnergyDelta = NewItemData->EnergyDelta;
+	bLifeForceItem = NewItemData->bLifeForceItem;
+	LifeForceDelta = NewItemData->LifeForceDelta;
+	bCraftable = NewItemData->bCraftable;
+	if (bCraftable) IngredientsToCraft = NewItemData->IngredientsToCraft;
 }
 
 

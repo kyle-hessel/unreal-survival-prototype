@@ -26,6 +26,9 @@ public:
 	TObjectPtr<UStaticMeshComponent> Item;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
+	int32 ItemID;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
 	int32 WorldItemIdentifier;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attributes")

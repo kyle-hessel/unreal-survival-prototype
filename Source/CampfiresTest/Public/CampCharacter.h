@@ -225,6 +225,12 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Combat")
 	int32 MaxComboNumber;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Building")
+	bool bInBuildMenu;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Building")
+	TArray<FVector> BuildSiteLocations;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -254,6 +260,9 @@ protected:
 	// Opens inventory menu UI.
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void OpenInventory();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void ToggleBuildMenu();
 	
 	// Campsite creation
 	UFUNCTION(BlueprintNativeEvent, Category = "Campsite")

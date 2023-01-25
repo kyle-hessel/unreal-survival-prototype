@@ -90,6 +90,7 @@ ACampCharacter::ACampCharacter()
 	
 	bSprinting = false;
 	bSitting = false;
+	bInBuildMenu = false;
 
 	// Sets default inventory sorting behavior. Might not be the best place for this, but better than on the InventoryComp since this should be a global setting for all inventories, not each individual one.
 	bSortByStack = true;
@@ -843,8 +844,17 @@ void ACampCharacter::PlaceItem()
 			//CreateCampsite();
 
 			// This function should soon open an item creation context menu.
+
+			ToggleBuildMenu();
+			bInBuildMenu = !bInBuildMenu;
 		}
 	}
+}
+
+// Configured in Blueprint, spawns a widget blueprint.
+void ACampCharacter::ToggleBuildMenu_Implementation()
+{
+	
 }
 
 // Created in blueprint to make use of helper functions such as RemoveNumbersFromString in BP_CampHelperFunctions.

@@ -269,13 +269,22 @@ bool UCampInventoryComponent::SpawnItem(FName ItemName)
 		SpawnedItem = GetWorld()->SpawnActor<ACampWorldItem>(ACampWorldItem::StaticClass(), SpawnTransform, SpawnParams);
 
 		// Once the item is spawned, repopulate it with the proper information from the row corresponding to its name.
+		TArray<FName> RowNames = Items->GetRowNames();
 		FItemStruct* NewItemData = Items->FindRow<FItemStruct>(ItemName, "Create", true);
-		
-		SpawnedItem->WorldItemName = ItemName;
+		SpawnedItem->ItemID = NewItemData->ItemID;
+		SpawnedItem->WorldItemIdentifier = NewItemData->ItemID;
+		SpawnedItem->WorldItemName = RowNames[SpawnedItem->WorldItemIdentifier];
 		SpawnedItem->DisplayName = NewItemData->DisplayName;
 		SpawnedItem->DisplayDescription = NewItemData->DisplayDescription;
 		SpawnedItem->bIsStackable = NewItemData->bIsStackable;
 		SpawnedItem->Item->SetStaticMesh(NewItemData->Mesh);
+		SpawnedItem->ItemType = NewItemData->ItemType;
+		SpawnedItem->bEnergyItem = NewItemData->bEnergyItem;
+		SpawnedItem->EnergyDelta = NewItemData->EnergyDelta;
+		SpawnedItem->bLifeForceItem = NewItemData->bLifeForceItem;
+		SpawnedItem->LifeForceDelta = NewItemData->LifeForceDelta;
+		SpawnedItem->bCraftable = NewItemData->bCraftable;
+		if (SpawnedItem->bCraftable) SpawnedItem->IngredientsToCraft = NewItemData->IngredientsToCraft;
 		SpawnedItem->Item->SetWorldScale3D(FVector(0.33f, 0.33f, 0.33f)); //*** TEMPORARY
 		// SpawnedItem->SetMaterial() // This or SetMaterialByName will likely be necessary later.
 

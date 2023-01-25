@@ -54,8 +54,9 @@ void UCampInteractionComponent::PrimaryInteract()
 		}
 	}
 
-	// Always query for WorldStatic objects regardless.
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic); //***TEMPORARY?
+	// Always query for WorldStatic objects and Items regardless.
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);//***TEMPORARY?
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel4);
 
 	// Store our owning character's eye location & rotation - start of collision trace
 	FVector EyeLocation;

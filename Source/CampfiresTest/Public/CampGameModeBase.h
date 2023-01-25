@@ -27,6 +27,9 @@ USTRUCT(BlueprintType)
 struct FItemStruct : public FTableRowBase // Derive from FTableRowBase to make this struct a datatable.
 {
 	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item | Attributes")
+	int32 ItemID;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item | Attributes")
 	FText DisplayName;
@@ -67,6 +70,7 @@ struct FItemStruct : public FTableRowBase // Derive from FTableRowBase to make t
 	// Struct defaults for members.
 	FItemStruct()
 	{
+		ItemID = 0;
 		DisplayName = FText::FromString("Item");
 		DisplayDescription = FText::FromString("Description");
 		Thumbnail = nullptr;
