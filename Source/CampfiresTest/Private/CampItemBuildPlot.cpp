@@ -50,6 +50,12 @@ void ACampItemBuildPlot::EndBoxOverlap(UPrimitiveComponent* OverlappedComp, AAct
 		CalculateAcquiredMaterials();
 		UE_LOG(LogTemp, Warning, TEXT("Character leaving."));
 	}
+
+	if (OtherActor->IsA(ACampWorldItem::StaticClass()))
+	{
+		ACampWorldItem* PickedUpWorldItem = Cast<ACampWorldItem>(OtherActor);
+		OverlappingItems.Remove(PickedUpWorldItem);
+	}
 }
 
 void ACampItemBuildPlot::CalculateAcquiredMaterials()
