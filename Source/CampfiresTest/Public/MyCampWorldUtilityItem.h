@@ -6,6 +6,8 @@
 #include "CampWorldItem.h"
 #include "MyCampWorldUtilityItem.generated.h"
 
+class UUserWidget;
+
 /**
  * 
  */
@@ -13,9 +15,6 @@ UCLASS()
 class CAMPFIRESTEST_API AMyCampWorldUtilityItem : public ACampWorldItem
 {
 	GENERATED_BODY()
-
-	// Override of parent function in ACampWorldItem, which itself is an implementation of ICampInteractionInterface's Interact function.
-	void Interact_Implementation(APawn* InstigatorPawn) override;
 
 public:
 	AMyCampWorldUtilityItem();
@@ -25,4 +24,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Interact")
+	void SpawnInteractMenu(APawn* InstigatorPawn);
+
+	// Override of parent function in ACampWorldItem, which itself is an implementation of ICampInteractionInterface's Interact function.
+	void Interact_Implementation(APawn* InstigatorPawn) override;
 };

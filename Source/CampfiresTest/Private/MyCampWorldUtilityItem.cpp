@@ -19,5 +19,12 @@ void AMyCampWorldUtilityItem::Interact_Implementation(APawn* InstigatorPawn)
 {
 	UE_LOG(LogTemp, Warning, TEXT("CampWorldUtilityItem"));
 
+	SpawnInteractMenu(InstigatorPawn);
+
 	//Super::Interact_Implementation(InstigatorPawn);
+}
+
+// BlueprintNativeEvent.
+void AMyCampWorldUtilityItem::SpawnInteractMenu_Implementation(APawn* InstigatorPawn)
+{
 }
