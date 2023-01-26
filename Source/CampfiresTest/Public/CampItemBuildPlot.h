@@ -9,6 +9,7 @@
 class ACampCharacter;
 class UBoxComponent;
 class ACampWorldItem;
+class AMyCampWorldUtilityItem;
 
 UCLASS()
 class CAMPFIRESTEST_API ACampItemBuildPlot : public AActor
@@ -37,6 +38,19 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 BuildItemIdentifier;
+
+	// Using TSubclassOf to allow assigning blueprint children in-editor that have their own custom logic, such as AMyCampWorldUtilityItem->ACampItemFirepit->BP_FirepitItem.
+	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
+	TSubclassOf<AMyCampWorldUtilityItem> FirepitClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
+	TSubclassOf<AMyCampWorldUtilityItem> TentClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
+	TSubclassOf<AMyCampWorldUtilityItem> TrunkClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
+	TSubclassOf<AMyCampWorldUtilityItem> BenchClass;
 
 	UPROPERTY()
 	bool bBuildingItem;

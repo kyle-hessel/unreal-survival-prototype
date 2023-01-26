@@ -9,6 +9,7 @@
 #include "CampInteractionComponent.h"
 #include "CampInventoryComponent.h"
 #include "CampWorldItem.h"
+#include "MyCampWorldUtilityItem.h"
 #include "Components/BoxComponent.h"
 
 class ACampWorldItem;
@@ -149,11 +150,34 @@ void ACampItemBuildPlot::SpawnBuildAndDeleteSelf()
 	const FTransform SpawnTransform = FTransform(GetActorRotation(), GetActorLocation());
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	ACampWorldItem* SpawnedItem = GetWorld()->SpawnActor<ACampWorldItem>(ACampWorldItem::StaticClass(), SpawnTransform, SpawnParams);
-
 	TArray<FName> RowNames = Items->GetRowNames();
+	ACampWorldItem* SpawnedItem;
+
+	// Determine which subclass of camp world utility item to spawn, and if item isn't one, spawn a normal camp world item.
+	// Using TSubClassOf variables here that are set in the editor so that functionality from both C++ and blueprint extended versions of the below classes is used.
+	if (RowNames[BuildItemIdentifier] == FName(TEXT("Firepit"))) // Sadly can't do a switch statement on FNames, apparently
+	{
+		SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(FirepitClass, SpawnTransform, SpawnParams);
+	}
+	else if (RowNames[BuildItemIdentifier] == FName(TEXT("Tent")))
+	{
+		SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TentClass, SpawnTransform, SpawnParams);
+	}
+	else if (RowNames[BuildItemIdentifier] == FName(TEXT("Trunk")))
+	{
+		SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TrunkClass, SpawnTransform, SpawnParams);
+	}
+	else if (RowNames[BuildItemIdentifier] == FName(TEXT("Bench")))
+	{
+		SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(BenchClass, SpawnTransform, SpawnParams);
+	}
+	else
+	{
+		SpawnedItem = GetWorld()->SpawnActor<ACampWorldItem>(ACampWorldItem::StaticClass(), SpawnTransform, SpawnParams);
+	}
 	
 	const FItemStruct* NewItemData = Items->FindRow<FItemStruct>(RowNames[BuildItemIdentifier], "Create", true);
+	
 	SpawnedItem->WorldItemIdentifier = BuildItemIdentifier;
 	SpawnedItem->WorldItemName = RowNames[BuildItemIdentifier];
 	SpawnedItem->DisplayName = NewItemData->DisplayName;
