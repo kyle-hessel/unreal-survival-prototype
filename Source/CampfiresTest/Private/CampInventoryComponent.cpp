@@ -40,7 +40,7 @@ void UCampInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType
 bool UCampInventoryComponent::AddItemToInventory(FName ItemName, int32 Quantity, bool bStackable)
 {
 	// Check if the inventory already has a given quantity of the existing item and store this value in a pointer.
-	int32* ExistingItemQuantity = InventoryContents.Find(ItemName);
+	const int32* ExistingItemQuantity = InventoryContents.Find(ItemName);
 	
 	if (ExistingItemQuantity != nullptr)
 	{
@@ -96,6 +96,11 @@ bool UCampInventoryComponent::AddItemToInventory(FName ItemName, int32 Quantity,
 
 				return true;
 			}
+		}
+		else
+		{
+			// Would like to add another check here, where if the inventory is full we check if the player has full pockets, and if not add it to that.
+			UE_LOG(LogTemp, Warning, TEXT("Inventory is fulL!"));
 		}
 	}
 

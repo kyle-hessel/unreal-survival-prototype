@@ -53,7 +53,8 @@ void ACampItemBuildPlot::EndBoxOverlap(UPrimitiveComponent* OverlappedComp, AAct
 		OverlappingItems.Remove(PickedUpWorldItem);
 		UE_LOG(LogTemp, Warning, TEXT("Overlapping item removed."));
 	}
-	
+
+	// If the character is leaving the plot, see if we can spawn the build, and if we can, do so (CalculateAcquiredMaterials()).
 	if (OtherActor->IsA(ACampCharacter::StaticClass()))
 	{
 		CampCharacter = Cast<ACampCharacter>(OtherActor);
@@ -120,6 +121,8 @@ void ACampItemBuildPlot::CalculateAcquiredMaterials()
 
 void ACampItemBuildPlot::SpawnBuildAndDeleteSelf()
 {
+	bool bAdded;
+	
 	// Return extra overlapping items back to the player's inventory before destroying the plot.
 	// Do this before spawning the build item, or it will be duplicated as it will be considered overlapping on this frame.
 	for (ACampWorldItem* Item : OverlappingItems)
@@ -127,16 +130,17 @@ void ACampItemBuildPlot::SpawnBuildAndDeleteSelf()
 		// If wearing a backpack, default to adding items to that.
 		if (const ACampBackpack* Backpack = CampCharacter->GetCampInteractComp()->GetHeldBackpack())
 		{
-			Backpack->GetCampInventoryComp()->AddItemToInventory(Item->WorldItemName, 1, Item->bIsStackable);
+			bAdded = Backpack->GetCampInventoryComp()->AddItemToInventory(Item->WorldItemName, 1, Item->bIsStackable);
 		}
 		// Otherwise, add it to the player's pockets.
 		else
 		{
 			// Add item to inventory map.
-			CampCharacter->GetCampInventoryComp()->AddItemToInventory(Item->WorldItemName, 1, Item->bIsStackable);
+			bAdded = CampCharacter->GetCampInventoryComp()->AddItemToInventory(Item->WorldItemName, 1, Item->bIsStackable);
 		}
 
-		Item->Destroy();
+		// Only destroy the item if it was successfully added to the inventory. If not, just clear the pointer but leave it on the ground.
+		if (bAdded) Item->Destroy();
 		Item = nullptr;
 	}
 
