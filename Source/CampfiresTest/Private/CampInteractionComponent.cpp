@@ -10,6 +10,7 @@
 #include "CampInventoryComponent.h"
 #include "CampWorldItem.h"
 #include "DrawDebugHelpers.h"
+#include "MyCampWorldUtilityItem.h"
 #include "Engine/StaticMeshSocket.h"
 
 // Sets default values for this component's properties
@@ -56,7 +57,7 @@ void UCampInteractionComponent::PrimaryInteract()
 
 	// Always query for WorldStatic objects and Items regardless.
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);//***TEMPORARY?
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel4);
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel4); // Items channel
 
 	// Store our owning character's eye location & rotation - start of collision trace
 	FVector EyeLocation;
@@ -122,12 +123,22 @@ void UCampInteractionComponent::PrimaryInteract()
 				// Stand CampCharacter back up.
 				CampCharacter->StandUp();
 			}
+
+			// If item is a AMyCampWorldUtilityItem, cache its type for use later in menus.
+			if (HitActor->IsA(AMyCampWorldUtilityItem::StaticClass()))
+			{
+				AMyCampWorldUtilityItem* UtilityItem = Cast<AMyCampWorldUtilityItem>(HitActor);
+				FName WorldItemName = UtilityItem->WorldItemName;
+				InteractableName = FText::FromName(WorldItemName);
+
+				// Might not be necessary
+				CurrentUtilityItem = UtilityItem;
+			}
 			
 			/* Lastly, call the interface's Interact function on the HitActor that we collided with during our trace,
 			 * and pass in our owning Actor (casted to a Pawn) firing the trace as the Instigator.
 			*/
 			if (Cast<APawn>(GetOwner())) ICampInteractionInterface::Execute_Interact(HitActor, Cast<APawn>(GetOwner()));
-
 
 			
 			// If our HitActor is of type CampWorldItem . . . (do this after calling the interface so that the item is already added)

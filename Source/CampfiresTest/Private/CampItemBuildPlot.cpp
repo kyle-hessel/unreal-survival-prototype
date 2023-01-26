@@ -155,7 +155,7 @@ void ACampItemBuildPlot::SpawnBuildAndDeleteSelf()
 
 	// Determine which subclass of camp world utility item to spawn, and if item isn't one, spawn a normal camp world item.
 	// Using TSubClassOf variables here that are set in the editor so that functionality from both C++ and blueprint extended versions of the below classes is used.
-	if (RowNames[BuildItemIdentifier] == FName(TEXT("Firepit"))) // Sadly can't do a switch statement on FNames, apparently
+	if (RowNames[BuildItemIdentifier] == FName(TEXT("Firepit"))) // Sadly can't do a switch statement on FNames, apparently. If converted to an FString, I could.
 	{
 		SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(FirepitClass, SpawnTransform, SpawnParams);
 	}

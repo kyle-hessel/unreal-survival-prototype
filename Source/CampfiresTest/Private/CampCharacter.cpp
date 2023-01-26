@@ -9,9 +9,12 @@
 #include "CampBackpack.h"
 #include "CampCampsite.h"
 #include "CampEnemyBase.h"
+#include "CampGameModeBase.h"
 #include "CampInteractionComponent.h"
 #include "CampInventoryComponent.h"
 #include "CampMeleeWeapon.h"
+#include "CampWorldItem.h"
+#include "MyCampWorldUtilityItem.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
@@ -91,6 +94,7 @@ ACampCharacter::ACampCharacter()
 	bSprinting = false;
 	bSitting = false;
 	bInBuildMenu = false;
+	bInInteractMenu = false;
 
 	// Sets default inventory sorting behavior. Might not be the best place for this, but better than on the InventoryComp since this should be a global setting for all inventories, not each individual one.
 	bSortByStack = true;
@@ -113,10 +117,7 @@ ACampCharacter::ACampCharacter()
 	MaxComboNumber = 3;
 	LockedOnEnemy = nullptr;
 
-	// Resource defaults
-	WoodNeededForCampsite = 1;
-	StoneNeededForCampsite = 1;
-	ClothNeededForCampsite = 1;
+	ItemSpawnDistanceFromPlayer = 120.f;
 }
 
 // Called when the game starts or when spawned
@@ -206,7 +207,7 @@ void ACampCharacter::MoveForward(float Value)
 {
 	//FVector Forward = GetActorForwardVector();
 	
-	if (InventoryComp->bIsOpen == false)
+	if (InventoryComp->bIsOpen == false && bInInteractMenu == false)
 	{
 		// Get controller rotation and zero out the Pitch and Roll; we only need the Yaw (rotation around Z-axis). Also make sure we aren't sitting.
 		if (Controller && Value != 0.0f && !bSitting)
@@ -229,7 +230,7 @@ void ACampCharacter::MoveRight(float Value)
 {
 	//FVector Right = GetActorRightVector();
 
-	if (InventoryComp->bIsOpen == false)
+	if (InventoryComp->bIsOpen == false && bInInteractMenu == false)
 	{
 		if (Controller && Value != 0.0f && !bSitting)
 		{
@@ -813,12 +814,11 @@ void ACampCharacter::ExecuteSheathTimer()
 // Call the attached CampInteractionComponent's PrimaryInteract function when the interact key is pressed.
 void ACampCharacter::PrimaryInteract()
 {
-	if (InventoryComp->bIsOpen == false)
+	if (InventoryComp->bIsOpen == false && bInBuildMenu == false && bInInteractMenu == false)
 	{
 		// (might) want to set this to only trigger if we aren't jumping, unsure as of now.
 		if (InteractComp) InteractComp->PrimaryInteract();
 	}
-
 }
 
 // Call the attached CampInteractionComponent's DropInteractable function when the drop key is pressed.
@@ -837,7 +837,7 @@ void ACampCharacter::DropItem()
 // Called from the Place action mapping.
 void ACampCharacter::PlaceItem()
 {
-	if (InventoryComp->bIsOpen == false)
+	if (InventoryComp->bIsOpen == false && bInInteractMenu == false)
 	{
 		if (JumpTimer <= 0.0f)
 		{
@@ -854,7 +854,11 @@ void ACampCharacter::PlaceItem()
 // Configured in Blueprint, spawns a widget blueprint.
 void ACampCharacter::ToggleBuildMenu_Implementation()
 {
-	
+}
+
+// Configured in Blueprint, spawns a widget blueprint.
+void ACampCharacter::ToggleInteractMenu_Implementation()
+{
 }
 
 // Created in blueprint to make use of helper functions such as RemoveNumbersFromString in BP_CampHelperFunctions.
@@ -879,6 +883,93 @@ void ACampCharacter::OpenInventory_Implementation()
 			ActiveContainerInventoryComp = nullptr;
 		}
 	}
+}
+
+// Blueprint callable function for spawning utility items from inventory.
+bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
+{
+
+	// Do a line trace downwards to determine if the item can be placed.
+	FCollisionObjectQueryParams ObjectQueryParams;
+	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+
+	FVector ActorHeightAdjustment = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 50.f);
+	FVector LateralLoc = ActorHeightAdjustment + GetActorForwardVector() * ItemSpawnDistanceFromPlayer;
+
+	float ActorLocZOffset = LateralLoc.Z - 200.f;
+	
+	FHitResult Hit;
+	FVector LineTraceEnd = FVector(LateralLoc.X, LateralLoc.Y, ActorLocZOffset);
+
+	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, LateralLoc, LineTraceEnd, ObjectQueryParams);
+	DrawDebugLine(GetWorld(), LateralLoc, LineTraceEnd, FColor::Silver, false, 3.0f, 0, 1.5f);
+
+	if (bBlockingHit)
+	{
+		FRotator GroundAlignedRotation = UKismetMathLibrary::MakeRotFromZX(Hit.ImpactNormal, LateralLoc);
+		
+		FActorSpawnParameters SpawnParams;
+
+		FTransform SpawnTransform = FTransform(GroundAlignedRotation, Hit.Location);
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		TArray<FName> RowNames = Items->GetRowNames();
+		ACampWorldItem* SpawnedItem;
+
+		// Determine which subclass of camp world utility item to spawn, and if item isn't one, spawn a normal camp world item.
+		// Using TSubClassOf variables here that are set in the editor so that functionality from both C++ and blueprint extended versions of the below classes is used.
+		if (ItemName == FName(TEXT("Firepit"))) // Sadly can't do a switch statement on FNames, apparently. If converted to an FString, I could.
+			{
+			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(FirepitClass, SpawnTransform, SpawnParams);
+			}
+		else if (ItemName == FName(TEXT("Tent")))
+		{
+			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TentClass, SpawnTransform, SpawnParams);
+		}
+		else if (ItemName == FName(TEXT("Trunk")))
+		{
+			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TrunkClass, SpawnTransform, SpawnParams);
+		}
+		else if (ItemName == FName(TEXT("Bench")))
+		{
+			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(BenchClass, SpawnTransform, SpawnParams);
+		}
+		else
+		{
+			SpawnedItem = GetWorld()->SpawnActor<ACampWorldItem>(ACampWorldItem::StaticClass(), SpawnTransform, SpawnParams);
+		}
+	
+		const FItemStruct* NewItemData = Items->FindRow<FItemStruct>(ItemName, "Create", true);
+
+		SpawnedItem->ItemID = NewItemData->ItemID;
+		SpawnedItem->WorldItemIdentifier = NewItemData->ItemID;
+		SpawnedItem->WorldItemName = ItemName;
+		SpawnedItem->DisplayName = NewItemData->DisplayName;
+		SpawnedItem->DisplayDescription = NewItemData->DisplayDescription;
+		SpawnedItem->bIsStackable = NewItemData->bIsStackable;
+		SpawnedItem->Item->SetStaticMesh(NewItemData->Mesh);
+		SpawnedItem->ItemType = NewItemData->ItemType;
+		SpawnedItem->bEnergyItem = NewItemData->bEnergyItem;
+		SpawnedItem->EnergyDelta = NewItemData->EnergyDelta;
+		SpawnedItem->bLifeForceItem = NewItemData->bLifeForceItem;
+		SpawnedItem->LifeForceDelta = NewItemData->LifeForceDelta;
+		SpawnedItem->bCraftable = NewItemData->bCraftable; 
+		if (SpawnedItem->bCraftable) SpawnedItem->IngredientsToCraft = NewItemData->IngredientsToCraft;
+
+		FVector OriginalActorLocation = SpawnedItem->GetActorLocation();
+		FRotator OriginalActorRotation = SpawnedItem->GetActorRotation();
+		FVector HeightAdjustment = SpawnedItem->Item->GetStaticMesh()->GetBoundingBox().GetSize();
+
+		SpawnedItem->SetActorLocation(FVector(OriginalActorLocation.X, OriginalActorLocation.Y, OriginalActorLocation.Z + HeightAdjustment.Z * 0.5f));
+		float RotationDifference = GetActorRotation().Yaw - SpawnedItem->GetActorRotation().Yaw;
+		SpawnedItem->AddActorLocalRotation(FRotator(0.f, RotationDifference, 0.f));
+
+		UE_LOG(LogTemp, Warning, TEXT("Spawned new item."));
+
+		return true;
+	}
+
+	return false;
 }
 
 // Create a campsite based on some restrictions. It doesn't seem necessary to make a whole new component just for this task, so I'm doing it on CampCharacter.

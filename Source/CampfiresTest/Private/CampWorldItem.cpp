@@ -71,29 +71,35 @@ void ACampWorldItem::Interact_Implementation(APawn* InstigatorPawn)
 {
 	//ICampInteractionInterface::Interact_Implementation(InstigatorPawn);
 
-	bool bAddedItem;
-
 	if (InstigatorPawn)
 	{
-		if (const ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
+		if (ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 		{
-			UE_LOG(LogTemp, Display, TEXT("Touched item :O"));
-
-			// If wearing a backpack, default to adding items to that.
-			if (const ACampBackpack* Backpack = CampCharacter->GetCampInteractComp()->GetHeldBackpack())
-			{
-				bAddedItem = Backpack->GetCampInventoryComp()->AddItemToInventory(WorldItemName, 1, bIsStackable);
-			}
-			// Otherwise, add it to the player's pockets.
-			else
-			{
-				// Add item to inventory map.
-				bAddedItem = CampCharacter->GetCampInventoryComp()->AddItemToInventory(WorldItemName, 1, bIsStackable);
-			}
-
-			// Destroy item once we've picked it up (if we pick it up).
-			if (bAddedItem) Destroy();
+			AddToInventoryAndDespawn(CampCharacter);
 		}
 	}
 }
+
+void ACampWorldItem::AddToInventoryAndDespawn(ACampCharacter* CampCharacter)
+{
+	UE_LOG(LogTemp, Display, TEXT("Touched item :O"));
+
+	bool bAddedItem;
+	
+	// If wearing a backpack, default to adding items to that.
+	if (const ACampBackpack* Backpack = CampCharacter->GetCampInteractComp()->GetHeldBackpack())
+	{
+		bAddedItem = Backpack->GetCampInventoryComp()->AddItemToInventory(WorldItemName, 1, bIsStackable);
+	}
+	// Otherwise, add it to the player's pockets.
+	else
+	{
+		// Add item to inventory map.
+		bAddedItem = CampCharacter->GetCampInventoryComp()->AddItemToInventory(WorldItemName, 1, bIsStackable);
+	}
+
+	// Destroy item once we've picked it up (if we pick it up).
+	if (bAddedItem) Destroy();
+}
+
 

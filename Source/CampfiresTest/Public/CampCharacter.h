@@ -17,6 +17,7 @@ class UCampInventoryComponent;
 class ACampCampsite;
 class ACampMeleeWeapon;
 class ACampEnemyBase;
+class AMyCampWorldUtilityItem;
 
 UCLASS()
 class CAMPFIRESTEST_API ACampCharacter : public ACharacter
@@ -167,15 +168,6 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	bool bSortByStack;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Campsite")
-	int32 WoodNeededForCampsite;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Campsite")
-	int32 StoneNeededForCampsite;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Campsite")
-	int32 ClothNeededForCampsite;
 	
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Combat")
 	bool bMeleeWeaponEquipped;
@@ -228,8 +220,14 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Building")
 	bool bInBuildMenu;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Interact")
+	bool bInInteractMenu;
+
 	UPROPERTY(BlueprintReadWrite, Category = "Building")
 	TArray<FVector> BuildSiteLocations;
+
+	UPROPERTY(EditDefaultsOnly)
+	float ItemSpawnDistanceFromPlayer;
 
 protected:
 	// Called when the game starts or when spawned
@@ -271,6 +269,18 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Placeables");
 	TSubclassOf<AActor> CampsiteClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
+	TSubclassOf<AMyCampWorldUtilityItem> FirepitClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
+	TSubclassOf<AMyCampWorldUtilityItem> TentClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
+	TSubclassOf<AMyCampWorldUtilityItem> TrunkClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
+	TSubclassOf<AMyCampWorldUtilityItem> BenchClass;
+
 	FTimerHandle TimerHandle_SheathTimer;
 
 public:	
@@ -290,6 +300,12 @@ public:
 	// Standing up (at campsite, for now)
 	UFUNCTION(BlueprintNativeEvent, Category = "Movement")
 	void StandUp();
+
+	UFUNCTION(BlueprintCallable, Category = "Utility")
+	bool SpawnUtilityItem(const FName ItemName);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void ToggleInteractMenu();
 
 	UFUNCTION()
 	void BeginCombatSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
