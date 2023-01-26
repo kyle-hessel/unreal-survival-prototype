@@ -130,8 +130,7 @@ void UCampInteractionComponent::PrimaryInteract()
 				AMyCampWorldUtilityItem* UtilityItem = Cast<AMyCampWorldUtilityItem>(HitActor);
 				FName WorldItemName = UtilityItem->WorldItemName;
 				InteractableName = FText::FromName(WorldItemName);
-
-				// Might not be necessary
+				
 				CurrentUtilityItem = UtilityItem;
 			}
 			
