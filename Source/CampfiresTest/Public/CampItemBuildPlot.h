@@ -38,6 +38,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int32 BuildItemIdentifier;
 
+	UPROPERTY()
+	bool bBuildingItem;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<TObjectPtr<ACampWorldItem>> OverlappingItems;
 

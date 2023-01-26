@@ -21,6 +21,8 @@ ACampItemBuildPlot::ACampItemBuildPlot()
 	BoundingBox->SetCollisionResponseToAllChannels(ECR_Overlap);
 	SetRootComponent(BoundingBox);
 
+	bBuildingItem = false;
+
 	BoundingBox->OnComponentBeginOverlap.AddDynamic(this, &ACampItemBuildPlot::BeginBoxOverlap);
 	BoundingBox->OnComponentEndOverlap.AddDynamic(this, &ACampItemBuildPlot::EndBoxOverlap);
 }
@@ -43,18 +45,23 @@ void ACampItemBuildPlot::BeginBoxOverlap(UPrimitiveComponent* OverlappedComp, AA
 
 void ACampItemBuildPlot::EndBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (OtherActor->IsA(ACampCharacter::StaticClass()))
-	{
-		CampCharacter = Cast<ACampCharacter>(OtherActor);
-		
-		CalculateAcquiredMaterials();
-		UE_LOG(LogTemp, Warning, TEXT("Character leaving."));
-	}
-
-	if (OtherActor->IsA(ACampWorldItem::StaticClass()))
+	// If an item ends box overlap, remove it from overlapping items to avoid required resource duplication.
+	// A bool check for bBuildingItem (set to true below) is also needed here so that this only fires when an item exits when we are NOT in the process of building.
+	if (OtherActor->IsA(ACampWorldItem::StaticClass()) && bBuildingItem == false)
 	{
 		ACampWorldItem* PickedUpWorldItem = Cast<ACampWorldItem>(OtherActor);
 		OverlappingItems.Remove(PickedUpWorldItem);
+		UE_LOG(LogTemp, Warning, TEXT("Overlapping item removed."));
+	}
+	
+	if (OtherActor->IsA(ACampCharacter::StaticClass()))
+	{
+		CampCharacter = Cast<ACampCharacter>(OtherActor);
+
+		bBuildingItem = true;
+		
+		CalculateAcquiredMaterials();
+		UE_LOG(LogTemp, Warning, TEXT("Character leaving."));
 	}
 }
 
@@ -94,7 +101,6 @@ void ACampItemBuildPlot::CalculateAcquiredMaterials()
 		UE_LOG(LogTemp, Warning, TEXT("Beginning consumption of resources."));
 
 		// Just before construction, delete all items that were allocated for the build from the ground.
-		// **** I would like to add a check here to reallocate any remaining OverlappingItems back to the player's inventory, meaning I'd have to 
 		for (ACampWorldItem* Deleting : ItemsPendingDeletion)
 		{
 			// Remove any item we are about to delete from our OverlappingItems array.
