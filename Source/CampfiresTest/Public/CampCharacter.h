@@ -294,7 +294,7 @@ public:
 	void Decelerate(float DeltaTime);
 
 	// Sitting down (at campsite, for now)
-	UFUNCTION(BlueprintNativeEvent, Category = "Movement")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Movement")
 	void SitDown();
 
 	// Standing up (at campsite, for now)

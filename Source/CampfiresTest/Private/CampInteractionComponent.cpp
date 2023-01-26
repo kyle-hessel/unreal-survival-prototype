@@ -100,30 +100,6 @@ void UCampInteractionComponent::PrimaryInteract()
 				//if (Cast<ACampBackpack>(HitActor)) HeldBackpack = Cast<ACampBackpack>(HitActor); UE_LOG(LogTemp, Warning, TEXT("Casted AActor to ACampBackpack."));
 			}
 
-			// If our HitActor is of type CampCampsite, store that in a variable we can use later. Don't check for nullptr since our campsite can change on the fly.
-			if (HitActor->IsA(ACampCampsite::StaticClass()))
-			{
-				CurrentCampsite = Cast<ACampCampsite>(HitActor);
-				UE_LOG(LogTemp, Warning, TEXT("Casted AActor to ACampCampsite."));
-			}
-
-			// If we have stored a campsite
-			if (CurrentCampsite && CampCharacter->bSitting == false)
-			{
-				// If we hit the bench within the campsite, sit in it as long as we aren't jumping.
-				if (HitComponent->GetName() == "Bench" && CampCharacter->bJumping == false) { // **** Should I move some of this to CampCampsite? Might be more elegant.
-
-					// Sit CampCharacter down on CampCampsite's Bench.
-					CampCharacter->SitDown();
-				}
-			}
-			// If we interact with the bench while sitting on it, stop sitting.
-			else if (CurrentCampsite && CampCharacter->bSitting == true)
-			{
-				// Stand CampCharacter back up.
-				CampCharacter->StandUp();
-			}
-
 			// If item is a AMyCampWorldUtilityItem, cache its type for use later in menus.
 			if (HitActor->IsA(AMyCampWorldUtilityItem::StaticClass()))
 			{

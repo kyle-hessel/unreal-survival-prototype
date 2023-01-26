@@ -12,6 +12,7 @@
 #include "CampGameModeBase.h"
 #include "CampInteractionComponent.h"
 #include "CampInventoryComponent.h"
+#include "CampItemBench.h"
 #include "CampMeleeWeapon.h"
 #include "CampWorldItem.h"
 #include "MyCampWorldUtilityItem.h"
@@ -814,11 +815,13 @@ void ACampCharacter::ExecuteSheathTimer()
 // Call the attached CampInteractionComponent's PrimaryInteract function when the interact key is pressed.
 void ACampCharacter::PrimaryInteract()
 {
-	if (InventoryComp->bIsOpen == false && bInBuildMenu == false && bInInteractMenu == false)
+	if (InventoryComp->bIsOpen == false && bInBuildMenu == false && bInInteractMenu == false && bSitting == false)
 	{
 		// (might) want to set this to only trigger if we aren't jumping, unsure as of now.
 		if (InteractComp) InteractComp->PrimaryInteract();
 	}
+
+	if (bSitting == true) StandUp();
 }
 
 // Call the attached CampInteractionComponent's DropInteractable function when the drop key is pressed.
@@ -837,7 +840,7 @@ void ACampCharacter::DropItem()
 // Called from the Place action mapping.
 void ACampCharacter::PlaceItem()
 {
-	if (InventoryComp->bIsOpen == false && bInInteractMenu == false)
+	if (InventoryComp->bIsOpen == false && bInInteractMenu == false && bSitting == false)
 	{
 		if (JumpTimer <= 0.0f)
 		{
@@ -1142,16 +1145,18 @@ void ACampCharacter::SitDown_Implementation()
 {
 	if (bInCombat == false && NearbyEnemies.Num() == 0)
 	{
-		// Change pawn collision when sitting.
-		SpawnedCampsite->Bench->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		InteractComp->SetCurrentSittingItem(Cast<ACampItemBench>(InteractComp->GetCurrentUtilityItem()));
+		const ACampItemBench* SittingItem = InteractComp->GetCurrentSittingItem();
 		
-		// Fetch the new campsite's bench location so we can place the player on it.
-		const ACampCampsite* CurrentCampsite = InteractComp->GetCurrentCampsite();
-		const FVector SitLocation = CurrentCampsite->Bench->GetSocketLocation("BenchSitLocation");
-		const FRotator SitRotation = CurrentCampsite->Bench->GetSocketRotation("BenchSitLocation");
+		// Change pawn collision when sitting.
+		SittingItem->Item->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		
+		// Fetch the new bench's location so we can place the player on it.
+		const FVector SitLocation = SittingItem->Item->GetSocketLocation("BenchSitLocation");
+		const FRotator SitRotation = SittingItem->Item->GetSocketRotation("BenchSitLocation");
 
 		// Tweaking the SitLocation so that the player's capsule component is offset and their mesh aligns properly.
-		const FVector SitLocationAdjusted = SitLocation + (CurrentCampsite->Bench->GetForwardVector() * 62) - (CurrentCampsite->Bench->GetRightVector() * 5);
+		const FVector SitLocationAdjusted = SitLocation + (SittingItem->Item->GetForwardVector() * 62) - (SittingItem->Item->GetRightVector() * 5);
 
 		// Place CampCharacter on the bench.
 		SetActorLocation(SitLocationAdjusted);
@@ -1169,15 +1174,20 @@ void ACampCharacter::SitDown_Implementation()
 // Stand the character back up. Also implemented in blueprint to reset braking fiction on CampCharacter's movement component.
 void ACampCharacter::StandUp_Implementation()
 {
-	bSitting = false;
+	if (InventoryComp->bIsOpen == false)
+	{
+		// Reset collision between player and bench.
+		InteractComp->GetCurrentSittingItem()->Item->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 
-	// Reset collision between player and bench.
-	InteractComp->GetCurrentCampsite()->Bench->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+		InteractComp->SetCurrentSittingItem(nullptr);
 				
-	// Reorient the player's rotation.
-	const FRotator CurrentCharacterRotation = GetActorRotation();
-	const FRotator RealignedRotation = FRotator(0.f, CurrentCharacterRotation.Yaw, 0.f);
-	SetActorRotation(RealignedRotation);
+		// Reorient the player's rotation.
+		const FRotator CurrentCharacterRotation = GetActorRotation();
+		const FRotator RealignedRotation = FRotator(0.f, CurrentCharacterRotation.Yaw, 0.f);
+		SetActorRotation(RealignedRotation);
+
+		bSitting = false;
+	}
 }
 
 // Decelerate the player out of sprinting only. Implemented in blueprint.

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "CampInteractionComponent.generated.h"
 
+class ACampItemBench;
 class AMyCampWorldUtilityItem;
 class ACampBackpack;
 class ACampCampsite;
@@ -29,6 +30,9 @@ class CAMPFIRESTEST_API UCampInteractionComponent final : public UActorComponent
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactables", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<AMyCampWorldUtilityItem> CurrentUtilityItem;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactables", meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<ACampItemBench> CurrentSittingItem;
+
 	UPROPERTY()
 	TObjectPtr<AActor> HitActor;
 
@@ -49,12 +53,18 @@ public:
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE AMyCampWorldUtilityItem* GetCurrentUtilityItem() const { if (CurrentUtilityItem) return CurrentUtilityItem; return nullptr; }
 
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE ACampItemBench* GetCurrentSittingItem() const { if (CurrentSittingItem) return CurrentSittingItem; return nullptr; }
+
 	// Setters
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetCurrentCampsite(ACampCampsite* Campsite) { CurrentCampsite = Campsite; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetCurrentUtilityItem(AMyCampWorldUtilityItem* UtilityItem) { CurrentUtilityItem = UtilityItem; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetCurrentSittingItem(ACampItemBench* SittingItem) { CurrentSittingItem = SittingItem; }
 
 protected:
 	// Called when the game starts

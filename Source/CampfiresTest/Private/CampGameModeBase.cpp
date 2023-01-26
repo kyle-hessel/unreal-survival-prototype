@@ -93,7 +93,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	FifthRowItem.DisplayDescription = FText::FromString("You can sit on it!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> FifthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/FWB-tVMWQAEyh86.FWB-tVMWQAEyh86'"));
 	if (FifthItemIcon.Succeeded()) FifthRowItem.Thumbnail = FifthItemIcon.Object;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> FifthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Backpack.Backpack'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FifthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Bench.Bench'"));
 	if (FifthStaticMesh.Succeeded()) FifthRowItem.Mesh = FifthStaticMesh.Object;
 	FifthRowItem.bIsStackable = false;
 	FifthRowItem.ItemType = EItemType::ITEM_Tool;
