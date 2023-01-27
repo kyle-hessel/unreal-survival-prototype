@@ -6,6 +6,8 @@
 #include "MyCampWorldUtilityItem.h"
 #include "CampItemTrunk.generated.h"
 
+class UCampInventoryComponent;
+
 /**
  * 
  */
@@ -13,6 +15,9 @@ UCLASS()
 class CAMPFIRESTEST_API ACampItemTrunk : public AMyCampWorldUtilityItem
 {
 	GENERATED_BODY()
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components | Inventory", meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<UCampInventoryComponent> InventoryComp;
 
 public:
 	ACampItemTrunk();

@@ -75,6 +75,7 @@ ACampCharacter::ACampCharacter()
 
 	DefaultAccelerationRate = AccelerationRate;
 	DefaultDecelerationRate = DecelerationRate;
+	DefaultBrakingFriction = GetCharacterMovement()->BrakingFriction;
 
 	// Set default slow multiplier when wearing backpack
 	SpeedMultiplier = 1.0f;
@@ -208,7 +209,7 @@ void ACampCharacter::MoveForward(float Value)
 {
 	//FVector Forward = GetActorForwardVector();
 	
-	if (InventoryComp->bIsOpen == false && bInInteractMenu == false)
+	if (InventoryComp->bIsOpen == false && bInteracting == false)
 	{
 		// Get controller rotation and zero out the Pitch and Roll; we only need the Yaw (rotation around Z-axis). Also make sure we aren't sitting.
 		if (Controller && Value != 0.0f && !bSitting)
@@ -231,7 +232,7 @@ void ACampCharacter::MoveRight(float Value)
 {
 	//FVector Right = GetActorRightVector();
 
-	if (InventoryComp->bIsOpen == false && bInInteractMenu == false)
+	if (InventoryComp->bIsOpen == false && bInteracting == false)
 	{
 		if (Controller && Value != 0.0f && !bSitting)
 		{
@@ -251,7 +252,7 @@ void ACampCharacter::MoveRight(float Value)
 // Start sprinting through our attached ActionComponent. This creates a new instantiation of CampAction.
 void ACampCharacter::SprintStart()
 {
-	if (InventoryComp->bIsOpen == false)
+	if (InventoryComp->bIsOpen == false && bInteracting == false)
 	{
 		// Don't start action if we are sitting.
 		if (!bSitting)
@@ -280,7 +281,7 @@ void ACampCharacter::SprintStop()
 // Override of built-in Character jump method.
 void ACampCharacter::Jump()
 {
-	if (InventoryComp->bIsOpen == false)
+	if (InventoryComp->bIsOpen == false && bInteracting == false)
 	{
 		// Only execute the parent function call if our JumpTimer isn't above 0. This effectively disables jumping when the timer is decrementing upon landing.
 		if (JumpTimer <= 0.0f && !bSitting)
@@ -815,7 +816,7 @@ void ACampCharacter::ExecuteSheathTimer()
 // Call the attached CampInteractionComponent's PrimaryInteract function when the interact key is pressed.
 void ACampCharacter::PrimaryInteract()
 {
-	if (InventoryComp->bIsOpen == false && bInBuildMenu == false && bInInteractMenu == false && bSitting == false)
+	if (InventoryComp->bIsOpen == false && bInBuildMenu == false && bSitting == false)
 	{
 		// (might) want to set this to only trigger if we aren't jumping, unsure as of now.
 		if (InteractComp) InteractComp->PrimaryInteract();
@@ -840,7 +841,7 @@ void ACampCharacter::DropItem()
 // Called from the Place action mapping.
 void ACampCharacter::PlaceItem()
 {
-	if (InventoryComp->bIsOpen == false && bInInteractMenu == false && bSitting == false)
+	if (InventoryComp->bIsOpen == false && bInteracting == false && bSitting == false)
 	{
 		if (JumpTimer <= 0.0f)
 		{
@@ -958,7 +959,6 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 		SpawnedItem->LifeForceDelta = NewItemData->LifeForceDelta;
 
 		FVector OriginalActorLocation = SpawnedItem->GetActorLocation();
-		FRotator OriginalActorRotation = SpawnedItem->GetActorRotation();
 		FVector HeightAdjustment = SpawnedItem->Item->GetStaticMesh()->GetBoundingBox().GetSize();
 
 		SpawnedItem->SetActorLocation(FVector(OriginalActorLocation.X, OriginalActorLocation.Y, OriginalActorLocation.Z + HeightAdjustment.Z * 0.5f));

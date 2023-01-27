@@ -62,7 +62,7 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	bool bIsOpen;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UPROPERTY(BlueprintReadWrite, Category = "Inventory")
 	TArray<FName> ItemsToConsume;
 	
 	// Maximum size of the inventory.

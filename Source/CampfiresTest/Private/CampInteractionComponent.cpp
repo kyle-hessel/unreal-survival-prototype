@@ -12,6 +12,7 @@
 #include "DrawDebugHelpers.h"
 #include "MyCampWorldUtilityItem.h"
 #include "Engine/StaticMeshSocket.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 UCampInteractionComponent::UCampInteractionComponent()
@@ -103,11 +104,13 @@ void UCampInteractionComponent::PrimaryInteract()
 			// If item is a AMyCampWorldUtilityItem, cache its type for use later in menus.
 			if (HitActor->IsA(AMyCampWorldUtilityItem::StaticClass()))
 			{
-				AMyCampWorldUtilityItem* UtilityItem = Cast<AMyCampWorldUtilityItem>(HitActor);
-				FName WorldItemName = UtilityItem->WorldItemName;
-				InteractableName = FText::FromName(WorldItemName);
+				//AMyCampWorldUtilityItem* UtilityItem = Cast<AMyCampWorldUtilityItem>(HitActor);
+				//FName WorldItemName = UtilityItem->WorldItemName;
+				//InteractableName = FText::FromName(WorldItemName);
 				
-				CurrentUtilityItem = UtilityItem;
+				//if (CampCharacter->bInAccessBox == true)
+				//{
+				//}
 			}
 			
 			/* Lastly, call the interface's Interact function on the HitActor that we collided with during our trace,

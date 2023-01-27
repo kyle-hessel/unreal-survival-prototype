@@ -114,6 +114,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetActiveMeleeWeapon(ACampMeleeWeapon* MeleeWeapon) { ActiveMeleeWeapon = MeleeWeapon; }
 
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetActiveContainer(AActor* Container) { ActiveContainerObject = Container; }
 
 	FORCEINLINE void RemoveNearbyEnemy(const ACampEnemyBase* Enemy) { NearbyEnemies.Remove(Enemy); }
@@ -143,6 +144,9 @@ public:
 	float DefaultDecelerationRate;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement")
+	float DefaultBrakingFriction;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement")
 	float SpeedMultiplier;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -162,6 +166,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement")
 	bool bSprinting;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Access")
+	bool bInAccessBox;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Access")
+	bool bInteracting;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Location")
 	float MinimumCampsiteDistance;

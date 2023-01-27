@@ -6,6 +6,8 @@
 #include "CampWorldItem.h"
 #include "MyCampWorldUtilityItem.generated.h"
 
+class UBoxComponent;
+
 /**
  * 
  */
@@ -17,9 +19,19 @@ class CAMPFIRESTEST_API AMyCampWorldUtilityItem : public ACampWorldItem
 public:
 	AMyCampWorldUtilityItem();
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Access")
+	TObjectPtr<UBoxComponent> AccessBox;
+
 protected:
 	virtual void BeginPlay() override;
 
 	// Override of parent function in ACampWorldItem, which itself is an implementation of ICampInteractionInterface's Interact function.
 	void Interact_Implementation(APawn* InstigatorPawn) override;
+
+public:
+	UFUNCTION()
+	void BeginBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	
+	UFUNCTION()
+	void EndBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };
