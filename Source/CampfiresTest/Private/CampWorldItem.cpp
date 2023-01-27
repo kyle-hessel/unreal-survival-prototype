@@ -56,8 +56,6 @@ void ACampWorldItem::BeginPlay()
 	EnergyDelta = NewItemData->EnergyDelta;
 	bLifeForceItem = NewItemData->bLifeForceItem;
 	LifeForceDelta = NewItemData->LifeForceDelta;
-	bCraftable = NewItemData->bCraftable;
-	if (bCraftable) IngredientsToCraft = NewItemData->IngredientsToCraft;
 }
 
 

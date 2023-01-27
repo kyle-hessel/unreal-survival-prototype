@@ -65,9 +65,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attributes")
 	bool bCraftable;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attributes")
-	TMap<FName, int32> IngredientsToCraft;
 	
 protected:
 	// Called when the game starts or when spawned

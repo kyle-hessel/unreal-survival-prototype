@@ -956,8 +956,6 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 		SpawnedItem->EnergyDelta = NewItemData->EnergyDelta;
 		SpawnedItem->bLifeForceItem = NewItemData->bLifeForceItem;
 		SpawnedItem->LifeForceDelta = NewItemData->LifeForceDelta;
-		SpawnedItem->bCraftable = NewItemData->bCraftable; 
-		if (SpawnedItem->bCraftable) SpawnedItem->IngredientsToCraft = NewItemData->IngredientsToCraft;
 
 		FVector OriginalActorLocation = SpawnedItem->GetActorLocation();
 		FRotator OriginalActorRotation = SpawnedItem->GetActorRotation();

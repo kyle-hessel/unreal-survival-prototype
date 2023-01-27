@@ -189,8 +189,6 @@ void ACampItemBuildPlot::SpawnBuildAndDeleteSelf()
 	SpawnedItem->EnergyDelta = NewItemData->EnergyDelta;
 	SpawnedItem->bLifeForceItem = NewItemData->bLifeForceItem;
 	SpawnedItem->LifeForceDelta = NewItemData->LifeForceDelta;
-	SpawnedItem->bCraftable = NewItemData->bCraftable; 
-	if (SpawnedItem->bCraftable) SpawnedItem->IngredientsToCraft = NewItemData->IngredientsToCraft;
 
 	UE_LOG(LogTemp, Warning, TEXT("Spawned new item."));
 

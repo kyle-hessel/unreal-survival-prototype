@@ -288,8 +288,6 @@ bool UCampInventoryComponent::SpawnItem(FName ItemName)
 		SpawnedItem->EnergyDelta = NewItemData->EnergyDelta;
 		SpawnedItem->bLifeForceItem = NewItemData->bLifeForceItem;
 		SpawnedItem->LifeForceDelta = NewItemData->LifeForceDelta;
-		SpawnedItem->bCraftable = NewItemData->bCraftable;
-		if (SpawnedItem->bCraftable) SpawnedItem->IngredientsToCraft = NewItemData->IngredientsToCraft;
 		SpawnedItem->Item->SetWorldScale3D(FVector(0.33f, 0.33f, 0.33f)); //*** TEMPORARY
 		// SpawnedItem->SetMaterial() // This or SetMaterialByName will likely be necessary later.
 
