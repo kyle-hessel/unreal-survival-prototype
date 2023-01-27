@@ -3,6 +3,7 @@
 
 #include "CampItemTrunk.h"
 
+#include "CampCharacter.h"
 #include "CampInventoryComponent.h"
 
 ACampItemTrunk::ACampItemTrunk()
@@ -18,7 +19,13 @@ void ACampItemTrunk::Interact_Implementation(APawn* InstigatorPawn)
 
 	UE_LOG(LogTemp, Warning, TEXT("Trunk."));
 
-	
+	if (ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
+	{
+		if (CampCharacter->bInAccessBox == true)
+		{
+			
+		}
+	}
 }
 
 

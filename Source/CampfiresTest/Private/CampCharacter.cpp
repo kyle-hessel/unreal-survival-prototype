@@ -816,13 +816,11 @@ void ACampCharacter::ExecuteSheathTimer()
 // Call the attached CampInteractionComponent's PrimaryInteract function when the interact key is pressed.
 void ACampCharacter::PrimaryInteract()
 {
-	if (InventoryComp->bIsOpen == false && bInBuildMenu == false && bSitting == false)
+	if (InventoryComp->bIsOpen == false && bInBuildMenu == false)
 	{
 		// (might) want to set this to only trigger if we aren't jumping, unsure as of now.
 		if (InteractComp) InteractComp->PrimaryInteract();
 	}
-
-	if (bSitting == true) StandUp();
 }
 
 // Call the attached CampInteractionComponent's DropInteractable function when the drop key is pressed.
@@ -1154,14 +1152,15 @@ void ACampCharacter::SitDown_Implementation()
 		const FRotator SitRotation = SittingItem->Item->GetSocketRotation("BenchSitLocation");
 
 		// Tweaking the SitLocation so that the player's capsule component is offset and their mesh aligns properly.
-		const FVector SitLocationAdjusted = SitLocation + (SittingItem->Item->GetForwardVector() * 62) - (SittingItem->Item->GetRightVector() * 5);
+		//const FVector SitLocationAdjusted = SitLocation + (SittingItem->Item->GetForwardVector() * 62) - (SittingItem->Item->GetRightVector() * 5);
 
 		// Place CampCharacter on the bench.
-		SetActorLocation(SitLocationAdjusted);
+		SetActorLocation(SitLocation);
 		SetActorRotation(SitRotation);
 		
 		// Set that we are sitting to play the right animations and disable movement.
 		bSitting = true;
+		UE_LOG(LogTemp, Warning, TEXT("Sat down."));
 	}
 	else
 	{

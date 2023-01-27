@@ -39,11 +39,7 @@ void AMyCampWorldUtilityItem::Interact_Implementation(APawn* InstigatorPawn)
 		//CampCharacter->ToggleInteractMenu();
 		//CampCharacter->bInInteractMenu = !CampCharacter->bInInteractMenu;
 
-		if (CampCharacter->bInAccessBox == true)
-		{
-			CampCharacter->bInteracting = true;
-		}
-		else
+		if (CampCharacter->bInAccessBox == false && CampCharacter->bSitting == false)
 		{
 			Super::Interact_Implementation(InstigatorPawn); // Calls ACampWorldItem Interact, which adds item to player's inventory.
 		}
