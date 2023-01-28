@@ -6,7 +6,6 @@
 #include "CampActionAttack.h"
 #include "CampActionComponent.h"
 #include "CampAttributeComponent.h"
-#include "CampBackpack.h"
 #include "CampCampsite.h"
 #include "CampEnemyBase.h"
 #include "CampGameModeBase.h"
@@ -19,7 +18,6 @@
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
-#include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -858,12 +856,6 @@ void ACampCharacter::ToggleBuildMenu_Implementation()
 {
 }
 
-// Configured in Blueprint, spawns a widget blueprint.
-void ACampCharacter::ToggleInteractMenu_Implementation()
-{
-}
-
-// Created in blueprint to make use of helper functions such as RemoveNumbersFromString in BP_CampHelperFunctions.
 //void ACampCharacter::FindItemInInventory_Implementation(FName ItemName, int32 Quantity)
 //{
 //}

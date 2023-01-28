@@ -97,21 +97,14 @@ void UCampInteractionComponent::PrimaryInteract()
 					// Close player inventory if backpack is equipped (this just sets the bool back, the below delegate actually closes it).
 					CampCharacter->GetCampInventoryComp()->bIsOpen = false;
 				}
-
-				//if (Cast<ACampBackpack>(HitActor)) HeldBackpack = Cast<ACampBackpack>(HitActor); UE_LOG(LogTemp, Warning, TEXT("Casted AActor to ACampBackpack."));
 			}
 
-			// If item is a AMyCampWorldUtilityItem, cache its type for use later in menus.
+			// If item is a AMyCampWorldUtilityItem, (maybe do something in the future here lul)
+			/*
 			if (HitActor->IsA(AMyCampWorldUtilityItem::StaticClass()))
 			{
-				//AMyCampWorldUtilityItem* UtilityItem = Cast<AMyCampWorldUtilityItem>(HitActor);
-				//FName WorldItemName = UtilityItem->WorldItemName;
-				//InteractableName = FText::FromName(WorldItemName);
-				
-				//if (CampCharacter->bInAccessBox == true)
-				//{
-				//}
 			}
+			*/
 			
 			/* Lastly, call the interface's Interact function on the HitActor that we collided with during our trace,
 			 * and pass in our owning Actor (casted to a Pawn) firing the trace as the Instigator.

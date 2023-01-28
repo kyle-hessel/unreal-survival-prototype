@@ -98,7 +98,7 @@ bool ACampBackpack::DropBackpack_Implementation()
 	if (CampCharacter)
 	{
 		// Move our bag's location so that it does not touch the player anymore but stays behind them; do this right before changing collision channels back.
-		FVector NewBagLocation = BackpackMesh->GetComponentLocation() - CampCharacter->GetActorForwardVector() * 2;
+		FVector NewBagLocation = BackpackMesh->GetComponentLocation() - CampCharacter->GetActorForwardVector() * 12.f;
 
 		// Set up our line trace query parameters to look for static world objects
 		FCollisionObjectQueryParams ObjectQueryParams;

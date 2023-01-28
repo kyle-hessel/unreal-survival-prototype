@@ -262,7 +262,7 @@ protected:
 	// Generic place item function, used to call CreateCampsite.
 	void PlaceItem();
 
-	//UFUNCTION(BlueprintNativeEvent, Category = "Inventory")
+	//UFUNCTION(BlueprintCallable, Category = "Inventory")
 	//void FindItemInInventory(FName ItemName, int32 Quantity);
 
 	// Opens inventory menu UI.
@@ -313,9 +313,6 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Utility")
 	bool SpawnUtilityItem(const FName ItemName);
-
-	UFUNCTION(BlueprintNativeEvent)
-	void ToggleInteractMenu();
 
 	UFUNCTION()
 	void BeginCombatSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

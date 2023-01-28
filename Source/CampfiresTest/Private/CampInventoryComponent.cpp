@@ -8,6 +8,7 @@
 #include "CampCampsite.h"
 #include "CampCharacter.h"
 #include "CampGameModeBase.h"
+#include "CampItemTrunk.h"
 #include "CampWorldItem.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -335,10 +336,10 @@ void UCampInventoryComponent::ConsumeItem(FName ItemNameAndNumber, const FName I
 				UE_LOG(LogTemp, Warning, TEXT("Energy gained!"));
 			}
 		}
-		else if (GetOwner()->IsA(ACampCampsite::StaticClass()))
+		else if (GetOwner()->IsA(ACampItemTrunk::StaticClass()))
 		{
-			const ACampCampsite* Campsite = Cast<ACampCampsite>(GetOwner());
-			const ACampCharacter* CampCharacter = Campsite->GetOwningCharacter();
+			const ACampItemTrunk* Trunk = Cast<ACampItemTrunk>(GetOwner());
+			const ACampCharacter* CampCharacter = Trunk->GetInstigatorPawn();
 
 			if (UCampAttributeComponent* AttributeComp = CampCharacter->GetCampAttributeComp())
 			{
