@@ -259,7 +259,7 @@ protected:
 	// Dropping bag, or item in hand
 	void DropItem();
 
-	// Generic place item function, used to call CreateCampsite.
+	// Generic place item function, used to call ToggleBuildMenu.
 	void PlaceItem();
 
 	//UFUNCTION(BlueprintCallable, Category = "Inventory")
@@ -271,10 +271,6 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void ToggleBuildMenu();
-	
-	// Campsite creation
-	UFUNCTION(BlueprintNativeEvent, Category = "Campsite")
-	bool CreateCampsite();
 
 	UPROPERTY(EditDefaultsOnly, Category = "Placeables");
 	TSubclassOf<AActor> CampsiteClass;
