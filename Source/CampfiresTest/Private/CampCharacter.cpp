@@ -6,7 +6,6 @@
 #include "CampActionAttack.h"
 #include "CampActionComponent.h"
 #include "CampAttributeComponent.h"
-#include "CampCampsite.h"
 #include "CampEnemyBase.h"
 #include "CampGameModeBase.h"
 #include "CampInteractionComponent.h"
@@ -84,9 +83,6 @@ ACampCharacter::ACampCharacter()
 	// Set default additive exhaustion multiplier from energy loss
 	ExhaustionMultiplier = 1.0f;
 
-	// Set default minimum distance we have to be from other campsites in order to place another.
-	MinimumCampsiteDistance = 3000.f;
-
 	// Init JumpTimer and jumping bool.
 	JumpTimer = 0.0f;
 	bJumping = false;
@@ -94,7 +90,6 @@ ACampCharacter::ACampCharacter()
 	bSprinting = false;
 	bSitting = false;
 	bInBuildMenu = false;
-	bInInteractMenu = false;
 
 	// Sets default inventory sorting behavior. Might not be the best place for this, but better than on the InventoryComp since this should be a global setting for all inventories, not each individual one.
 	bSortByStack = true;
@@ -189,10 +184,10 @@ void ACampCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ACampCharacter::PrimaryInteract);
 
 	// Bind drop interaction to DropItem function, which calls DropEquipable from the Interact Component.
-	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &ACampCharacter::DropItem);
+	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &ACampCharacter::DropBag);
 
 	// Bind place action to PlaceItem function. Places typically a campsite, but potentially other items such as sleeping bags.
-	PlayerInputComponent->BindAction("Place", IE_Pressed, this, &ACampCharacter::PlaceItem);
+	PlayerInputComponent->BindAction("Place", IE_Pressed, this, &ACampCharacter::PlaceBuild);
 
 	// Bind toggle left and right actions to their respective functions, this is for combat lock-on toggling.
 	PlayerInputComponent->BindAction("ToggleLeft", IE_Pressed, this, &ACampCharacter::LockOnToggleBackward);
@@ -822,7 +817,7 @@ void ACampCharacter::PrimaryInteract()
 }
 
 // Call the attached CampInteractionComponent's DropInteractable function when the drop key is pressed.
-void ACampCharacter::DropItem()
+void ACampCharacter::DropBag()
 {
 	if (InventoryComp->bIsOpen == false)
 	{
@@ -835,7 +830,7 @@ void ACampCharacter::DropItem()
 }
 
 // Called from the Place action mapping.
-void ACampCharacter::PlaceItem()
+void ACampCharacter::PlaceBuild()
 {
 	if (InventoryComp->bIsOpen == false && bInteracting == false && bSitting == false)
 	{

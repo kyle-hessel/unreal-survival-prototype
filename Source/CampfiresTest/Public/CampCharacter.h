@@ -50,12 +50,6 @@ class CAMPFIRESTEST_API ACampCharacter : public ACharacter
 	TObjectPtr<ACampMeleeWeapon> ActiveMeleeWeapon;
 
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<ACampCampsite> SpawnedCampsite;
-	
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
-	TArray<TObjectPtr<ACampCampsite>> Campsites;
-
-	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<AActor> ActiveContainerObject;
 
 	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess = "true"))
@@ -173,9 +167,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Access")
 	bool bInteracting;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Location")
-	float MinimumCampsiteDistance;
-
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Inventory")
 	bool bSortByStack;
 	
@@ -230,9 +221,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Building")
 	bool bInBuildMenu;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Interact")
-	bool bInInteractMenu;
-
 	UPROPERTY(BlueprintReadWrite, Category = "Building")
 	TArray<FVector> BuildSiteLocations;
 
@@ -257,10 +245,10 @@ protected:
 	void PrimaryInteract();
 
 	// Dropping bag, or item in hand
-	void DropItem();
+	void DropBag();
 
 	// Generic place item function, used to call ToggleBuildMenu.
-	void PlaceItem();
+	void PlaceBuild();
 
 	//UFUNCTION(BlueprintCallable, Category = "Inventory")
 	//void FindItemInInventory(FName ItemName, int32 Quantity);
@@ -271,9 +259,6 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent)
 	void ToggleBuildMenu();
-
-	UPROPERTY(EditDefaultsOnly, Category = "Placeables");
-	TSubclassOf<AActor> CampsiteClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Item Classes")
 	TSubclassOf<AMyCampWorldUtilityItem> FirepitClass;
