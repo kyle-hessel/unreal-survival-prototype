@@ -13,7 +13,7 @@ class ACampCharacter;
  * 
  */
 UCLASS()
-class CAMPFIRESTEST_API ACampItemTrunk : public AMyCampWorldUtilityItem
+class CAMPFIRESTEST_API ACampItemTrunk final : public AMyCampWorldUtilityItem
 {
 	GENERATED_BODY()
 

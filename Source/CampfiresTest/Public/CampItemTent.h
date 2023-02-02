@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class CAMPFIRESTEST_API ACampItemTent : public AMyCampWorldUtilityItem
+class CAMPFIRESTEST_API ACampItemTent final : public AMyCampWorldUtilityItem
 {
 	GENERATED_BODY()
 

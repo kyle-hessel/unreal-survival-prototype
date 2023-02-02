@@ -44,8 +44,6 @@ ACampCharacter::ACampCharacter()
 	ThirdPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ThirdPersonCamera"));
 	ThirdPersonCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	ThirdPersonCamera->bUsePawnControlRotation = false;
-	FKey Key;
-	Key.IsGamepadKey();
 
 	// Create the attribute component that will be attached to the player.
 	AttributeComp = CreateDefaultSubobject<UCampAttributeComponent>(TEXT("AttributeComp"));
