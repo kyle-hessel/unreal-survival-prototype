@@ -879,30 +879,138 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 	// Do a line trace downwards to determine if the item can be placed.
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectQueryParams.RemoveObjectTypesToQuery(ECC_GameTraceChannel3);
 
-	if (ItemName == FName(TEXT("Firepit"))) ItemSpawnDistanceFromPlayer = 180.f;
-	else if (ItemName == FName(TEXT("Tent"))) ItemSpawnDistanceFromPlayer = 220.f;
-	else if (ItemName == FName(TEXT("Trunk"))) ItemSpawnDistanceFromPlayer = 150.f;
-	else if (ItemName == FName(TEXT("Bench"))) ItemSpawnDistanceFromPlayer = 140.f;
+	float LocXOffset = 300.f;
+	float LocYOffset = 300.f;
+
+	// Determine positioning defaults for different types of utility items.
+	if (ItemName == FName(TEXT("Firepit")))
+	{
+		ItemSpawnDistanceFromPlayer = 180.f;
+		LocXOffset = 200.f;
+		LocYOffset = 200.f;
+	}
+	else if (ItemName == FName(TEXT("Tent")))
+	{
+		ItemSpawnDistanceFromPlayer = 220.f;
+		LocXOffset = 175.f;
+		LocYOffset = 225.f;
+	}
+	else if (ItemName == FName(TEXT("Trunk")))
+	{
+		ItemSpawnDistanceFromPlayer = 150.f;
+		LocXOffset = 100.f;
+		LocYOffset = 100.f;
+	}
+	else if (ItemName == FName(TEXT("Bench")))
+	{
+		ItemSpawnDistanceFromPlayer = 140.f;
+		LocXOffset = 75.f;
+		LocYOffset = 150.f;
+	}
 
 	FVector ActorHeightAdjustment = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 50.f);
 	FVector LateralLoc = ActorHeightAdjustment + GetActorForwardVector() * ItemSpawnDistanceFromPlayer;
 
-	float ActorLocZOffset = LateralLoc.Z - 200.f;
+	float VerticalLocZOffset = LateralLoc.Z - 200.f;
 	
-	FHitResult Hit;
-	FVector LineTraceEnd = FVector(LateralLoc.X, LateralLoc.Y, ActorLocZOffset);
+	FHitResult HitCenter;
+	FVector LineTraceEnd = FVector(LateralLoc.X, LateralLoc.Y, VerticalLocZOffset);
 
-	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, LateralLoc, LineTraceEnd, ObjectQueryParams);
+	// Center line trace
+	bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(HitCenter, LateralLoc, LineTraceEnd, ObjectQueryParams);
 	DrawDebugLine(GetWorld(), LateralLoc, LineTraceEnd, FColor::Silver, false, 3.0f, 0, 1.5f);
 
+	// Check terrain around the item before spawning.
 	if (bBlockingHit)
 	{
-		FRotator GroundAlignedRotation = UKismetMathLibrary::MakeRotFromZX(Hit.ImpactNormal, LateralLoc);
-		
+		float LocZOffset = HitCenter.Location.Z - 50.f;
+
+		// Left line trace
+		FHitResult HitLeft;
+		LineTraceEnd = FVector(LateralLoc.X - LocXOffset, LateralLoc.Y, LocZOffset);
+		bBlockingHit = GetWorld()->LineTraceSingleByObjectType(HitLeft, LateralLoc, LineTraceEnd, ObjectQueryParams);
+		DrawDebugLine(GetWorld(), LateralLoc, LineTraceEnd, FColor::Orange, false, 3.0f, 0, 1.5f);
+
+		FHitResult HitRight;
+		if (bBlockingHit)
+		{
+			// Right line trace
+			LineTraceEnd = FVector(LateralLoc.X + LocXOffset, LateralLoc.Y, LocZOffset);
+			bBlockingHit = GetWorld()->LineTraceSingleByObjectType(HitRight, LateralLoc, LineTraceEnd, ObjectQueryParams);
+			DrawDebugLine(GetWorld(), LateralLoc, LineTraceEnd, FColor::Turquoise, false, 3.0f, 0, 1.5f);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Adequate terrain not found."));
+			return false;
+		}
+
+		FHitResult HitForwards;
+		if (bBlockingHit)
+		{
+			// Forwards line trace
+			LineTraceEnd = FVector(LateralLoc.X, LateralLoc.Y + LocYOffset, LocZOffset);
+			bBlockingHit = GetWorld()->LineTraceSingleByObjectType(HitForwards, LateralLoc, LineTraceEnd, ObjectQueryParams);
+			DrawDebugLine(GetWorld(), LateralLoc, LineTraceEnd, FColor::Cyan, false, 3.0f, 0, 1.5f);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Adequate terrain not found."));
+			return false;
+		}
+
+		FHitResult HitBackwards;
+		if (bBlockingHit)
+		{
+			// Backwards line trace
+			LineTraceEnd = FVector(LateralLoc.X, LateralLoc.Y - LocYOffset, LocZOffset);
+			bBlockingHit = GetWorld()->LineTraceSingleByObjectType(HitBackwards, LateralLoc, LineTraceEnd, ObjectQueryParams);
+			DrawDebugLine(GetWorld(), LateralLoc, LineTraceEnd, FColor::White, false, 3.0f, 0, 1.5f);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Adequate terrain not found."));
+			return false;
+		}
+
+		if (bBlockingHit)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("All line traces succeeded, proceeding with dot products."));
+
+			// Averaged dot product to get a rough sense of terrain smoothness relative to this item's bounds
+			float DotOne = FVector::DotProduct(GetActorUpVector(), HitCenter.ImpactNormal);
+			float DotTwo = FVector::DotProduct(GetActorUpVector(), HitLeft.ImpactNormal);
+			float DotThree = FVector::DotProduct(GetActorUpVector(), HitRight.ImpactNormal);
+			float DotFour = FVector::DotProduct(GetActorUpVector(), HitForwards.ImpactNormal);
+			float DotFive = FVector::DotProduct(GetActorUpVector(), HitBackwards.ImpactNormal);
+
+			float DotAveraged = (DotOne + DotTwo + DotThree + DotFour + DotFive) / 5.f;
+			UE_LOG(LogTemp, Warning, TEXT("Dot averaged: %f"), DotAveraged);
+			constexpr float DotThreshold = 0.9875f; // Should be very close to 1.0.
+
+			if (DotAveraged < DotThreshold)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Terrain too uneven, cannot place utility item."));
+				return false;
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Adequate terrain not found."));
+			return false;
+		}
+
+		// If none of the above checks returned false, we have suitable terrain.
+		UE_LOG(LogTemp, Warning, TEXT("Terrain relatively even, continuing with placement of utility item."));
+
+		// Item spawning
 		FActorSpawnParameters SpawnParams;
 
-		FTransform SpawnTransform = FTransform(GroundAlignedRotation, Hit.Location);
+		FRotator GroundAlignedRotation = UKismetMathLibrary::MakeRotFromZX(HitCenter.ImpactNormal, LateralLoc);
+
+		FTransform SpawnTransform = FTransform(GroundAlignedRotation, HitCenter.Location);
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		TArray<FName> RowNames = Items->GetRowNames();
@@ -910,27 +1018,14 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 
 		// Determine which subclass of camp world utility item to spawn, and if item isn't one, spawn a normal camp world item.
 		// Using TSubClassOf variables here that are set in the editor so that functionality from both C++ and blueprint extended versions of the below classes is used.
-		if (ItemName == FName(TEXT("Firepit"))) // Sadly can't do a switch statement on FNames, apparently. If converted to an FString, I could.
-		{
-			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(FirepitClass, SpawnTransform, SpawnParams);
-		}
-		else if (ItemName == FName(TEXT("Tent")))
-		{
-			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TentClass, SpawnTransform, SpawnParams);
-		}
-		else if (ItemName == FName(TEXT("Trunk")))
-		{
-			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TrunkClass, SpawnTransform, SpawnParams);
-		}
-		else if (ItemName == FName(TEXT("Bench")))
-		{
-			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(BenchClass, SpawnTransform, SpawnParams);
-		}
-		else
-		{
-			SpawnedItem = GetWorld()->SpawnActor<ACampWorldItem>(ACampWorldItem::StaticClass(), SpawnTransform, SpawnParams);
-		}
-	
+		// Sadly can't do a switch statement on FNames, apparently. If converted to an FString, I could.
+		if (ItemName == FName(TEXT("Firepit")))		SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(FirepitClass, SpawnTransform, SpawnParams);
+		else if (ItemName == FName(TEXT("Tent")))	SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TentClass, SpawnTransform, SpawnParams);
+		else if (ItemName == FName(TEXT("Trunk")))	SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TrunkClass, SpawnTransform, SpawnParams);
+		else if (ItemName == FName(TEXT("Bench")))	SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(BenchClass, SpawnTransform, SpawnParams);
+		else										SpawnedItem = GetWorld()->SpawnActor<ACampWorldItem>(ACampWorldItem::StaticClass(), SpawnTransform, SpawnParams);
+
+		
 		const FItemStruct* NewItemData = Items->FindRow<FItemStruct>(ItemName, "Create", true);
 
 		SpawnedItem->ItemID = NewItemData->ItemID;
@@ -955,6 +1050,7 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 		return true;
 	}
 
+	UE_LOG(LogTemp, Warning, TEXT("Adequate terrain not found."));
 	return false;
 }
 
