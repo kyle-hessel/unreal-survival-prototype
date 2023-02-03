@@ -34,13 +34,24 @@ void AMyCampWorldUtilityItem::Interact_Implementation(APawn* InstigatorPawn)
 	UE_LOG(LogTemp, Warning, TEXT("CampWorldUtilityItem"));
 
 	// Spawn an interact menu that lets the player either interact with the item in a meaningful way, OR pick it up.
-	if (ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
+	if (const ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 	{
 		if (CampCharacter->bInAccessBox == false && CampCharacter->bSitting == false)
 		{
 			Super::Interact_Implementation(InstigatorPawn); // Calls ACampWorldItem Interact, which adds item to player's inventory.
 		}
 	}
+}
+
+void AMyCampWorldUtilityItem::PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation)
+{
+	ICampItemPlacementInterface::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
+
+	const FVector HeightAdjustment = Item->GetStaticMesh()->GetBoundingBox().GetSize();
+
+	SetActorLocation(FVector(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z + HeightAdjustment.Z * 0.5f));
+	const float RotationDifference = PlayerRotation.Yaw - GetActorRotation().Yaw;
+	AddActorLocalRotation(FRotator(0.f, RotationDifference, 0.f));
 }
 
 void AMyCampWorldUtilityItem::BeginBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

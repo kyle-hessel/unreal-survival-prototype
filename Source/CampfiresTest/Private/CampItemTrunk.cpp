@@ -21,6 +21,13 @@ void ACampItemTrunk::Interact_Implementation(APawn* InstigatorPawn)
 	UE_LOG(LogTemp, Warning, TEXT("Trunk."));
 }
 
+void ACampItemTrunk::PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation)
+{
+	Super::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
+
+	
+}
+
 void ACampItemTrunk::BeginBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Super::BeginBoxOverlap(OverlappedComp, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);

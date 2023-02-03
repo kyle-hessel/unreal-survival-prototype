@@ -24,3 +24,10 @@ void ACampItemTent::Interact_Implementation(APawn* InstigatorPawn)
 		}
 	}
 }
+
+void ACampItemTent::PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation)
+{
+	Super::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
+
+	
+}

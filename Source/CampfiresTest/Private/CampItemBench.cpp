@@ -26,4 +26,11 @@ void ACampItemBench::Interact_Implementation(APawn* InstigatorPawn)
 	}
 }
 
+void ACampItemBench::PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation)
+{
+	Super::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
+
+	
+}
+
 

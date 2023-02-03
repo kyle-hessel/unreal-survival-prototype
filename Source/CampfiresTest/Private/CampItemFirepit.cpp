@@ -27,3 +27,10 @@ void ACampItemFirepit::Interact_Implementation(APawn* InstigatorPawn)
 		}
 	}
 }
+
+void ACampItemFirepit::PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation)
+{
+	Super::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
+
+	
+}

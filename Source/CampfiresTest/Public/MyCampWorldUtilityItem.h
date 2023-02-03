@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CampItemPlacementInterface.h"
 #include "CampWorldItem.h"
 #include "MyCampWorldUtilityItem.generated.h"
 
@@ -12,7 +13,7 @@ class UBoxComponent;
  * 
  */
 UCLASS()
-class CAMPFIRESTEST_API AMyCampWorldUtilityItem : public ACampWorldItem
+class CAMPFIRESTEST_API AMyCampWorldUtilityItem : public ACampWorldItem, public ICampItemPlacementInterface
 {
 	GENERATED_BODY()
 
@@ -27,6 +28,9 @@ protected:
 
 	// Override of parent function in ACampWorldItem, which itself is an implementation of ICampInteractionInterface's Interact function.
 	void Interact_Implementation(APawn* InstigatorPawn) override;
+
+	// Override of CampItemPlacementInterface's PlaceItem function.
+	void PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation) override;
 
 	UFUNCTION()
 	virtual void BeginBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

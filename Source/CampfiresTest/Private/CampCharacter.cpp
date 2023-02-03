@@ -942,11 +942,8 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 		SpawnedItem->LifeForceDelta = NewItemData->LifeForceDelta;
 
 		FVector OriginalActorLocation = SpawnedItem->GetActorLocation();
-		FVector HeightAdjustment = SpawnedItem->Item->GetStaticMesh()->GetBoundingBox().GetSize();
-
-		SpawnedItem->SetActorLocation(FVector(OriginalActorLocation.X, OriginalActorLocation.Y, OriginalActorLocation.Z + HeightAdjustment.Z * 0.5f));
-		float RotationDifference = GetActorRotation().Yaw - SpawnedItem->GetActorRotation().Yaw;
-		SpawnedItem->AddActorLocalRotation(FRotator(0.f, RotationDifference, 0.f));
+		// Positions the newly spawned item, based on its own implementation of the below interface.
+		ICampItemPlacementInterface::Execute_PlaceItem(SpawnedItem, OriginalActorLocation, GetActorRotation());
 
 		UE_LOG(LogTemp, Warning, TEXT("Spawned new item."));
 
