@@ -18,7 +18,7 @@ ACampWorldItem::ACampWorldItem()
 	Item->SetCollisionObjectType(ECC_GameTraceChannel4);
 	Item->SetCollisionResponseToAllChannels(ECR_Overlap);
 	Item->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Ignore);
-	SetRootComponent(Item);
+	Item->SetupAttachment(GetRootComponent());
 
 	// Set world item defaults, change these per-item in blueprint as necessary.
 	bIsHoldable = true;

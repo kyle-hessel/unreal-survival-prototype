@@ -93,7 +93,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	FifthRowItem.DisplayDescription = FText::FromString("You can sit on it!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> FifthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/FWB-tVMWQAEyh86.FWB-tVMWQAEyh86'"));
 	if (FifthItemIcon.Succeeded()) FifthRowItem.Thumbnail = FifthItemIcon.Object;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> FifthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Bench.Bench'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> FifthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Items/Interactables/Bench/bench_model.bench_model'"));
 	if (FifthStaticMesh.Succeeded()) FifthRowItem.Mesh = FifthStaticMesh.Object;
 	FifthRowItem.bIsStackable = false;
 	FifthRowItem.ItemType = EItemType::ITEM_Tool;
@@ -109,7 +109,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	SixthRowItem.DisplayDescription = FText::FromString("You can safely sleep in it!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> SixthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/Untitled.Untitled'"));
 	if (SixthItemIcon.Succeeded()) SixthRowItem.Thumbnail = SixthItemIcon.Object;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SixthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Campfire.Campfire'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SixthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Items/Interactables/Tent_Simple/Tent_Simple_Mesh.Tent_Simple_Mesh'"));
 	if (SixthStaticMesh.Succeeded()) SixthRowItem.Mesh = SixthStaticMesh.Object;
 	SixthRowItem.bIsStackable = false;
 	SixthRowItem.ItemType = EItemType::ITEM_Tool;
@@ -143,7 +143,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	EighthRowItem.DisplayDescription = FText::FromString("You can light fires here. Careful, it gets hot!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> EighthItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/itme.itme'"));
 	if (EighthItemIcon.Succeeded()) EighthRowItem.Thumbnail = EighthItemIcon.Object;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> EighthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Campfire.Campfire'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> EighthStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Items/Interactables/Firepit/firepit_rocks.firepit_rocks'"));
 	if (EighthStaticMesh.Succeeded()) EighthRowItem.Mesh = EighthStaticMesh.Object;
 	EighthRowItem.bIsStackable = false;
 	EighthRowItem.ItemType = EItemType::ITEM_Tool;

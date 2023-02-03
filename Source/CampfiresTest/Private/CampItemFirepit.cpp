@@ -8,6 +8,9 @@
 ACampItemFirepit::ACampItemFirepit()
 {
 	WorldItemIdentifier = 7; // Firepit
+
+	KindlingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KindlingMesh"));
+	KindlingMesh->SetupAttachment(Item);
 }
 
 void ACampItemFirepit::Interact_Implementation(APawn* InstigatorPawn)
