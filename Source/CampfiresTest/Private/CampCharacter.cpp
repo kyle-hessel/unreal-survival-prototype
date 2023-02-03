@@ -112,7 +112,7 @@ ACampCharacter::ACampCharacter()
 	MaxComboNumber = 3;
 	LockedOnEnemy = nullptr;
 
-	ItemSpawnDistanceFromPlayer = 120.f;
+	ItemSpawnDistanceFromPlayer = 160.f;
 }
 
 // Called when the game starts or when spawned
@@ -880,6 +880,11 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 	FCollisionObjectQueryParams ObjectQueryParams;
 	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);
 
+	if (ItemName == FName(TEXT("Firepit"))) ItemSpawnDistanceFromPlayer = 180.f;
+	else if (ItemName == FName(TEXT("Tent"))) ItemSpawnDistanceFromPlayer = 220.f;
+	else if (ItemName == FName(TEXT("Trunk"))) ItemSpawnDistanceFromPlayer = 150.f;
+	else if (ItemName == FName(TEXT("Bench"))) ItemSpawnDistanceFromPlayer = 140.f;
+
 	FVector ActorHeightAdjustment = FVector(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 50.f);
 	FVector LateralLoc = ActorHeightAdjustment + GetActorForwardVector() * ItemSpawnDistanceFromPlayer;
 
@@ -906,9 +911,9 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 		// Determine which subclass of camp world utility item to spawn, and if item isn't one, spawn a normal camp world item.
 		// Using TSubClassOf variables here that are set in the editor so that functionality from both C++ and blueprint extended versions of the below classes is used.
 		if (ItemName == FName(TEXT("Firepit"))) // Sadly can't do a switch statement on FNames, apparently. If converted to an FString, I could.
-			{
+		{
 			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(FirepitClass, SpawnTransform, SpawnParams);
-			}
+		}
 		else if (ItemName == FName(TEXT("Tent")))
 		{
 			SpawnedItem = GetWorld()->SpawnActor<AMyCampWorldUtilityItem>(TentClass, SpawnTransform, SpawnParams);

@@ -47,11 +47,9 @@ void AMyCampWorldUtilityItem::PlaceItem_Implementation(FVector SpawnLocation, FR
 {
 	ICampItemPlacementInterface::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
 
-	const FVector HeightAdjustment = Item->GetStaticMesh()->GetBoundingBox().GetSize();
-
-	SetActorLocation(FVector(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z + HeightAdjustment.Z * 0.5f));
+	SetActorLocation(FVector(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z));
 	const float RotationDifference = PlayerRotation.Yaw - GetActorRotation().Yaw;
-	AddActorLocalRotation(FRotator(0.f, RotationDifference, 0.f));
+	AddActorLocalRotation(FRotator(0.f, RotationDifference + 90.f, 0.f));
 }
 
 void AMyCampWorldUtilityItem::BeginBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -16,7 +16,7 @@ void ACampItemTent::Interact_Implementation(APawn* InstigatorPawn)
 
 	UE_LOG(LogTemp, Warning, TEXT("Tent."));
 
-	if (ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
+	if (const ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 	{
 		if (CampCharacter->bInAccessBox == true)
 		{
@@ -27,7 +27,9 @@ void ACampItemTent::Interact_Implementation(APawn* InstigatorPawn)
 
 void ACampItemTent::PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation)
 {
-	Super::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
+	//Super::PlaceItem_Implementation(SpawnLocation, PlayerRotation)
 
-	
+	SetActorLocation(FVector(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z));
+	const float RotationDifference = PlayerRotation.Yaw - GetActorRotation().Yaw;
+	AddActorLocalRotation(FRotator(0.f, RotationDifference + 180.f, 0.f));
 }
