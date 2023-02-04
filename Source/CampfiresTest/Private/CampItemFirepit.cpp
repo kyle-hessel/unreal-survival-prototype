@@ -4,6 +4,7 @@
 #include "CampItemFirepit.h"
 
 #include "CampCharacter.h"
+#include "CampInteractionComponent.h"
 
 ACampItemFirepit::ACampItemFirepit()
 {
@@ -17,13 +18,16 @@ void ACampItemFirepit::Interact_Implementation(APawn* InstigatorPawn)
 {
 	Super::Interact_Implementation(InstigatorPawn);
 
-	UE_LOG(LogTemp, Warning, TEXT("Firepit."));
-
-	if (ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
+	if (const ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 	{
-		if (CampCharacter->bInAccessBox == true)
+		if (CampCharacter->GetCampInteractComp()->GetCurrentUtilityItem() == this)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Firepit."));
 			
+			if (CampCharacter->bInAccessBox == true)
+			{
+			
+			}
 		}
 	}
 }

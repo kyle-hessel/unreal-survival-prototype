@@ -11,7 +11,7 @@
 
 ACampWorldItem::ACampWorldItem()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
 	SetRootComponent(DefaultRoot);
@@ -59,12 +59,6 @@ void ACampWorldItem::BeginPlay()
 	EnergyDelta = NewItemData->EnergyDelta;
 	bLifeForceItem = NewItemData->bLifeForceItem;
 	LifeForceDelta = NewItemData->LifeForceDelta;
-}
-
-
-void ACampWorldItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 // Triggered when the player interacts with the item through CampInteractionComponent.

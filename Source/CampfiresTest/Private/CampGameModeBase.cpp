@@ -126,7 +126,7 @@ void ACampGameModeBase::PopulateItemsDataTable() const
 	SeventhRowItem.DisplayDescription = FText::FromString("You can store things in it!");
 	static ConstructorHelpers::FObjectFinder<UTexture2D> SeventhItemIcon(TEXT("Texture2D'/Game/CampfiresTest/Assets/Textures/InventoryIcons/prof_cropped.prof_cropped'"));
 	if (SeventhItemIcon.Succeeded()) SeventhRowItem.Thumbnail = SeventhItemIcon.Object;
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SeventhStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Test_Meshes/Backpack.Backpack'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SeventhStaticMesh(TEXT("StaticMesh'/Game/CampfiresTest/Assets/Items/Interactables/Trunk/Trunk_base.Trunk_base'"));
 	if (SeventhStaticMesh.Succeeded()) SeventhRowItem.Mesh = SeventhStaticMesh.Object;
 	SeventhRowItem.bIsStackable = false;
 	SeventhRowItem.ItemType = EItemType::ITEM_Tool;

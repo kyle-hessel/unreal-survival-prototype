@@ -4,6 +4,7 @@
 #include "CampItemBench.h"
 
 #include "CampCharacter.h"
+#include "CampInteractionComponent.h"
 
 ACampItemBench::ACampItemBench()
 {
@@ -13,15 +14,18 @@ ACampItemBench::ACampItemBench()
 void ACampItemBench::Interact_Implementation(APawn* InstigatorPawn)
 {
 	Super::Interact_Implementation(InstigatorPawn);
-	
-	UE_LOG(LogTemp, Warning, TEXT("Bench."));
 
 	if (ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 	{
-		if (CampCharacter->bInAccessBox == true)
+		if (CampCharacter->GetCampInteractComp()->GetCurrentUtilityItem() == this)
 		{
-			if (CampCharacter->bSitting == false) CampCharacter->SitDown();
-			else CampCharacter->StandUp();
+			UE_LOG(LogTemp, Warning, TEXT("Bench."));
+			
+			if (CampCharacter->bInAccessBox == true)
+			{
+				if (CampCharacter->bSitting == false) CampCharacter->SitDown();
+				else CampCharacter->StandUp();
+			}
 		}
 	}
 }

@@ -4,6 +4,7 @@
 #include "CampItemTent.h"
 
 #include "CampCharacter.h"
+#include "CampInteractionComponent.h"
 
 ACampItemTent::ACampItemTent()
 {
@@ -13,14 +14,18 @@ ACampItemTent::ACampItemTent()
 void ACampItemTent::Interact_Implementation(APawn* InstigatorPawn)
 {
 	Super::Interact_Implementation(InstigatorPawn);
-
-	UE_LOG(LogTemp, Warning, TEXT("Tent."));
+	
 
 	if (const ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 	{
-		if (CampCharacter->bInAccessBox == true)
+		if (CampCharacter->GetCampInteractComp()->GetCurrentUtilityItem() == this)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Tent."));
 			
+			if (CampCharacter->bInAccessBox == true)
+			{
+			
+			}
 		}
 	}
 }

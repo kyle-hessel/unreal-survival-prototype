@@ -36,7 +36,7 @@ void AMyCampWorldUtilityItem::Interact_Implementation(APawn* InstigatorPawn)
 	// Spawn an interact menu that lets the player either interact with the item in a meaningful way, OR pick it up.
 	if (const ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 	{
-		if (CampCharacter->bInAccessBox == false && CampCharacter->bSitting == false)
+		if (CampCharacter->GetCampInteractComp()->GetCurrentUtilityItem() != this && CampCharacter->bSitting == false)
 		{
 			Super::Interact_Implementation(InstigatorPawn); // Calls ACampWorldItem Interact, which adds item to player's inventory.
 		}
@@ -57,6 +57,7 @@ void AMyCampWorldUtilityItem::BeginBoxOverlap(UPrimitiveComponent* OverlappedCom
 	{
 		ACampCharacter* CampCharacter = Cast<ACampCharacter>(OtherActor);
 		CampCharacter->bInAccessBox = true;
+		bBeingAccessed = true;
 		CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(this);
 	}
 }
@@ -67,6 +68,7 @@ void AMyCampWorldUtilityItem::EndBoxOverlap(UPrimitiveComponent* OverlappedComp,
 	{
 		ACampCharacter* CampCharacter = Cast<ACampCharacter>(OtherActor);
 		CampCharacter->bInAccessBox = false;
+		bBeingAccessed = false;
 		CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(nullptr);
 	}
 }

@@ -11,6 +11,7 @@
 #include "CampInteractionComponent.h"
 #include "CampInventoryComponent.h"
 #include "CampItemBench.h"
+#include "CampItemTrunk.h"
 #include "CampMeleeWeapon.h"
 #include "CampWorldItem.h"
 #include "MyCampWorldUtilityItem.h"
@@ -865,10 +866,7 @@ void ACampCharacter::OpenInventory_Implementation()
 
 			ActiveContainerInventoryComp = Cast<UCampInventoryComponent>(FetchedInventoryComponent);
 		}
-		else
-		{
-			ActiveContainerInventoryComp = nullptr;
-		}
+		else ActiveContainerInventoryComp = nullptr;
 	}
 }
 
@@ -1059,26 +1057,28 @@ void ACampCharacter::SitDown_Implementation()
 {
 	if (bInCombat == false && NearbyEnemies.Num() == 0)
 	{
-		InteractComp->SetCurrentSittingItem(Cast<ACampItemBench>(InteractComp->GetCurrentUtilityItem()));
-		const ACampItemBench* SittingItem = InteractComp->GetCurrentSittingItem();
+		if (ACampItemBench* SittingItem = Cast<ACampItemBench>(InteractComp->GetCurrentUtilityItem()))
+		{
+			InteractComp->SetCurrentSittingItem(SittingItem);
+			
+			// Change pawn collision when sitting.
+			SittingItem->Item->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 		
-		// Change pawn collision when sitting.
-		SittingItem->Item->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
-		
-		// Fetch the new bench's location so we can place the player on it.
-		const FVector SitLocation = SittingItem->Item->GetSocketLocation("BenchSitLocation");
-		const FRotator SitRotation = SittingItem->Item->GetSocketRotation("BenchSitLocation");
+			// Fetch the new bench's location so we can place the player on it.
+			const FVector SitLocation = SittingItem->Item->GetSocketLocation("BenchSitLocation");
+			const FRotator SitRotation = SittingItem->Item->GetSocketRotation("BenchSitLocation");
 
-		// Tweaking the SitLocation so that the player's capsule component is offset and their mesh aligns properly.
-		//const FVector SitLocationAdjusted = SitLocation + (SittingItem->Item->GetForwardVector() * 62) - (SittingItem->Item->GetRightVector() * 5);
+			// Tweaking the SitLocation so that the player's capsule component is offset and their mesh aligns properly.
+			//const FVector SitLocationAdjusted = SitLocation + (SittingItem->Item->GetForwardVector() * 62) - (SittingItem->Item->GetRightVector() * 5);
 
-		// Place CampCharacter on the bench.
-		SetActorLocation(SitLocation);
-		SetActorRotation(SitRotation);
+			// Place CampCharacter on the bench.
+			SetActorLocation(SitLocation);
+			SetActorRotation(SitRotation);
 		
-		// Set that we are sitting to play the right animations and disable movement.
-		bSitting = true;
-		UE_LOG(LogTemp, Warning, TEXT("Sat down."));
+			// Set that we are sitting to play the right animations and disable movement.
+			bSitting = true;
+			UE_LOG(LogTemp, Warning, TEXT("Sat down."));
+		}
 	}
 	else
 	{

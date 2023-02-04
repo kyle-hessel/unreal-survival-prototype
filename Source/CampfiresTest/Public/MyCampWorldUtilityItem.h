@@ -38,5 +38,7 @@ protected:
 	UFUNCTION()
 	virtual void EndBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	bool bBeingAccessed;
+
 public:
 };

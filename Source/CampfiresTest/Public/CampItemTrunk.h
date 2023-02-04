@@ -23,8 +23,22 @@ class CAMPFIRESTEST_API ACampItemTrunk final : public AMyCampWorldUtilityItem
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Instigator", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<ACampCharacter> CampCharacter;
 
+	float CurrentLidRoll;
+	float OpenTarget;
+	float ClosedTarget;
+	FRotator OpenRotation;
+	FRotator ClosedRotation;
+
 public:
 	ACampItemTrunk();
+
+	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
+	TObjectPtr<UStaticMeshComponent> LidMesh;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Lid")
+	float OpenSpeed;
 
 	// Getters
 	UFUNCTION(BlueprintPure)
@@ -34,6 +48,8 @@ public:
 	FORCEINLINE UCampInventoryComponent* GetCampInventoryComp() const { return InventoryComp; }
 
 protected:
+	virtual void BeginPlay() override;
+	
 	// Override of parent function in ACampWorldUtilityItem, itself inheriting up the tree from an interface.
 	void Interact_Implementation(APawn* InstigatorPawn) override;
 
