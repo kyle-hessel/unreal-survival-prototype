@@ -21,5 +21,5 @@ protected:
 	// Override of parent function in ACampWorldUtilityItem, itself inheriting up the tree from an interface.
 	void Interact_Implementation(APawn* InstigatorPawn) override;
 
-	void PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation) override;
+	void OrientItem_Implementation(FRotator PlayerRotation) override;
 };

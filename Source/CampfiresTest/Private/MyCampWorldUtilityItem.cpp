@@ -43,11 +43,10 @@ void AMyCampWorldUtilityItem::Interact_Implementation(APawn* InstigatorPawn)
 	}
 }
 
-void AMyCampWorldUtilityItem::PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation)
+void AMyCampWorldUtilityItem::OrientItem_Implementation(FRotator PlayerRotation)
 {
-	ICampItemPlacementInterface::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
-
-	SetActorLocation(FVector(SpawnLocation.X, SpawnLocation.Y, SpawnLocation.Z));
+	ICampItemPlacementInterface::OrientItem_Implementation(PlayerRotation);
+	
 	const float RotationDifference = PlayerRotation.Yaw - GetActorRotation().Yaw;
 	AddActorLocalRotation(FRotator(0.f, RotationDifference + 90.f, 0.f));
 }

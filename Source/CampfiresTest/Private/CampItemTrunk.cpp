@@ -21,9 +21,9 @@ void ACampItemTrunk::Interact_Implementation(APawn* InstigatorPawn)
 	UE_LOG(LogTemp, Warning, TEXT("Trunk."));
 }
 
-void ACampItemTrunk::PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation)
+void ACampItemTrunk::OrientItem_Implementation(FRotator PlayerRotation)
 {
-	Super::PlaceItem_Implementation(SpawnLocation, PlayerRotation);
+	Super::OrientItem_Implementation(PlayerRotation);
 
 	
 }

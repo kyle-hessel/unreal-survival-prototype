@@ -1043,7 +1043,7 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 
 		FVector OriginalActorLocation = SpawnedItem->GetActorLocation();
 		// Positions the newly spawned item, based on its own implementation of the below interface.
-		ICampItemPlacementInterface::Execute_PlaceItem(SpawnedItem, OriginalActorLocation, GetActorRotation());
+		ICampItemPlacementInterface::Execute_OrientItem(SpawnedItem, GetActorRotation());
 
 		UE_LOG(LogTemp, Warning, TEXT("Spawned new item."));
 
@@ -1054,7 +1054,7 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 	return false;
 }
 
-// Sit the character down at the current campsite's bench. Also implemented in blueprint to call this functionality plus killing movement.
+// Sit the character down at the current  bench. Also implemented in blueprint to call this functionality plus killing movement.
 void ACampCharacter::SitDown_Implementation()
 {
 	if (bInCombat == false && NearbyEnemies.Num() == 0)

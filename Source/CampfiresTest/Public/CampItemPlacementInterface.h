@@ -24,5 +24,5 @@ class CAMPFIRESTEST_API ICampItemPlacementInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Interact")
-	void PlaceItem(FVector SpawnLocation, FRotator PlayerRotation);
+	void OrientItem(FRotator PlayerRotation);
 };

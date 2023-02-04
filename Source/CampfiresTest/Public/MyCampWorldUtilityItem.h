@@ -30,7 +30,7 @@ protected:
 	void Interact_Implementation(APawn* InstigatorPawn) override;
 
 	// Override of CampItemPlacementInterface's PlaceItem function.
-	void PlaceItem_Implementation(FVector SpawnLocation, FRotator PlayerRotation) override;
+	void OrientItem_Implementation(FRotator PlayerRotation) override;
 
 	UFUNCTION()
 	virtual void BeginBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
