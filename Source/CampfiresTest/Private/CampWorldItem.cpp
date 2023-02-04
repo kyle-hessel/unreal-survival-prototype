@@ -13,6 +13,9 @@ ACampWorldItem::ACampWorldItem()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
+	SetRootComponent(DefaultRoot);
+
 	Item = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item"));
 	Item->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Item->SetCollisionObjectType(ECC_GameTraceChannel4);

@@ -27,8 +27,5 @@ void ACampItemTent::Interact_Implementation(APawn* InstigatorPawn)
 
 void ACampItemTent::OrientItem_Implementation(FRotator PlayerRotation)
 {
-	//Super::PlaceItem_Implementation(SpawnLocation, PlayerRotation)
-	
-	const float RotationDifference = PlayerRotation.Yaw - GetActorRotation().Yaw;
-	AddActorLocalRotation(FRotator(0.f, RotationDifference + 180.f, 0.f));
+	Super::OrientItem_Implementation(PlayerRotation);
 }

@@ -20,6 +20,9 @@ class CAMPFIRESTEST_API ACampWorldItem : public AActor, public ICampInteractionI
 public:	
 	// Sets default values for this actor's properties
 	ACampWorldItem();
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Root")
+	TObjectPtr<USceneComponent> DefaultRoot;
 
 	// Generic item mesh, can be anything really.
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")

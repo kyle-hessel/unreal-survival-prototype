@@ -147,7 +147,9 @@ void ACampItemBuildPlot::SpawnBuildAndDeleteSelf()
 
 	FActorSpawnParameters SpawnParams;
 
-	const FTransform SpawnTransform = FTransform(GetActorRotation(), GetActorLocation());
+	const FRotator ActorRotationTweak = FRotator(GetActorRotation().Pitch, GetActorRotation().Yaw + 90.f, GetActorRotation().Roll);
+
+	const FTransform SpawnTransform = FTransform(ActorRotationTweak, GetActorLocation());
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	TArray<FName> RowNames = Items->GetRowNames();
