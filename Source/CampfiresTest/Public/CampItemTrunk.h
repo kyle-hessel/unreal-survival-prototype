@@ -26,8 +26,6 @@ class CAMPFIRESTEST_API ACampItemTrunk final : public AMyCampWorldUtilityItem
 	float CurrentLidRoll;
 	float OpenTarget;
 	float ClosedTarget;
-	FRotator OpenRotation;
-	FRotator ClosedRotation;
 
 public:
 	ACampItemTrunk();

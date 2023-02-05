@@ -24,12 +24,10 @@ void ACampItemTrunk::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//  This only stays so that chests manually placed and not spawned in the level still open and close. Otherwise it's redundant.
 	ClosedTarget = LidMesh->GetComponentRotation().Roll;
 	CurrentLidRoll = ClosedTarget;
 	OpenTarget = LidMesh->GetComponentRotation().Roll - 55.f;
-
-	OpenRotation = FRotator(LidMesh->GetComponentRotation().Pitch, LidMesh->GetComponentRotation().Yaw, OpenTarget);
-	ClosedRotation = FRotator(LidMesh->GetComponentRotation().Pitch, LidMesh->GetComponentRotation().Yaw, ClosedTarget);
 }
 
 void ACampItemTrunk::Tick(float DeltaTime)
@@ -46,10 +44,6 @@ void ACampItemTrunk::Tick(float DeltaTime)
 				LidMesh->AddLocalRotation(FRotator(0.f, 0.f, -OpenSpeed * DeltaTime));
 				CurrentLidRoll = LidMesh->GetComponentRotation().Roll;
 			}
-			else
-			{
-				if (LidMesh->GetComponentRotation() != OpenRotation) LidMesh->SetWorldRotation(OpenRotation);
-			}
 		}
 		else
 		{
@@ -57,10 +51,6 @@ void ACampItemTrunk::Tick(float DeltaTime)
 			{
 				LidMesh->AddLocalRotation(FRotator(0.f, 0.f, OpenSpeed * DeltaTime));
 				CurrentLidRoll = LidMesh->GetComponentRotation().Roll;
-			}
-			else
-			{
-				if (LidMesh->GetComponentRotation() != ClosedRotation) LidMesh->SetWorldRotation(ClosedRotation);
 			}
 		}
 	}
@@ -77,6 +67,11 @@ void ACampItemTrunk::Interact_Implementation(APawn* InstigatorPawn)
 void ACampItemTrunk::OrientItem_Implementation(FRotator PlayerRotation)
 {
 	Super::OrientItem_Implementation(PlayerRotation);
+
+	// DO this here instead of in BeginPlay since the parent call above is what adds local rotation relative to terrain. We need this information before caching rots.
+	ClosedTarget = LidMesh->GetComponentRotation().Roll;
+	CurrentLidRoll = ClosedTarget;
+	OpenTarget = LidMesh->GetComponentRotation().Roll - 55.f;
 }
 
 void ACampItemTrunk::BeginBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -97,6 +92,7 @@ void ACampItemTrunk::EndBoxOverlap(UPrimitiveComponent* OverlappedComp, AActor* 
 	if (OtherActor->IsA(ACampCharacter::StaticClass()))
 	{
 		CampCharacter->SetActiveContainer(nullptr);
+		CampCharacter->SetActiveContainerInventoryComp(nullptr);
 		CampCharacter = nullptr;
 	}
 

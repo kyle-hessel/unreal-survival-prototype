@@ -866,7 +866,6 @@ void ACampCharacter::OpenInventory_Implementation()
 
 			ActiveContainerInventoryComp = Cast<UCampInventoryComponent>(FetchedInventoryComponent);
 		}
-		else ActiveContainerInventoryComp = nullptr;
 	}
 }
 
