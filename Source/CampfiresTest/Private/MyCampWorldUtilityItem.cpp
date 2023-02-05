@@ -56,9 +56,14 @@ void AMyCampWorldUtilityItem::BeginBoxOverlap(UPrimitiveComponent* OverlappedCom
 	if (OtherActor->IsA(ACampCharacter::StaticClass()))
 	{
 		ACampCharacter* CampCharacter = Cast<ACampCharacter>(OtherActor);
-		CampCharacter->bInAccessBox = true;
-		bBeingAccessed = true;
-		CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(this);
+		// this check helps ensure only one access box at a time without overwriting one another
+		// might need another look, still isn't perfect.
+		if (CampCharacter->bInAccessBox == false)
+		{
+			CampCharacter->bInAccessBox = true;
+			bBeingAccessed = true;
+			CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(this);
+		}
 	}
 }
 
@@ -67,9 +72,14 @@ void AMyCampWorldUtilityItem::EndBoxOverlap(UPrimitiveComponent* OverlappedComp,
 	if (OtherActor->IsA(ACampCharacter::StaticClass()))
 	{
 		ACampCharacter* CampCharacter = Cast<ACampCharacter>(OtherActor);
-		CampCharacter->bInAccessBox = false;
-		bBeingAccessed = false;
-		CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(nullptr);
+		// // this check helps ensure only one access box at a time without clearing one another
+		// might need another look, still isn't perfect.
+		if (CampCharacter->bInAccessBox == true)
+		{
+			CampCharacter->bInAccessBox = false;
+			bBeingAccessed = false;
+			CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(nullptr);
+		}
 	}
 }
 
