@@ -6,7 +6,7 @@
 ACampGameModeBase::ACampGameModeBase()
 {
 	// Load default items data table created in-editor into C++.
-	static ConstructorHelpers::FObjectFinder<UDataTable> ItemsDataObject(TEXT("DataTable'/Game/CampfiresTest/Blueprints/Interactables/DT_Items_Default.DT_Items_Default'"));
+	static ConstructorHelpers::FObjectFinder<UDataTable> ItemsDataObject(TEXT("DataTable'/Game/CampfiresTest/Blueprints/Interactables/DT_Items_Default1.DT_Items_Default1'"));
 
 	// If a data table isn't specified in blueprint, load in this default data table into our Items data table.
 	if (ItemsDataObject.Succeeded()) Items = ItemsDataObject.Object;

@@ -1,5 +1,5 @@
-.idea
-.vscode
-.git
-Content
-Intermediate
+/.vscode
+/.git
+/Intermediate
+/Content
+/.idea
