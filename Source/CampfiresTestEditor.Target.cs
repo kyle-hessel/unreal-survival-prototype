@@ -7,6 +7,7 @@ public class CampfiresTestEditorTarget : TargetRules
 {
 	public CampfiresTestEditorTarget( TargetInfo Target) : base(Target)
 	{
+		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "CampfiresTest" } );
