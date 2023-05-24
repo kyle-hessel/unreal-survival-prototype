@@ -65,7 +65,7 @@ class CAMPFIRESTEST_API ACampCharacter : public ACharacter
 	 * Private function declarations for CampCharacter
 	*/
 	
-	static float CompareRotRelativeToActor(FRotator ActorOneRotation, FRotator LookAtRotation);
+	static float CompareRotRelativeToActor(const FRotator& ActorOneRotation, const FRotator& LookAtRotation);
 
 public:
 	// Sets default values for this character's properties

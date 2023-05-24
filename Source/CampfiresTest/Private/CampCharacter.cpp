@@ -688,7 +688,7 @@ void ACampCharacter::PlayHitCameraShake_Implementation()
 
 // Helper function. Meant to return a value from 0-1 comparing the actor's given rotation to its 'look at rotation'—its rotation when looking at another given actor.
 // Use UKismetMathLibrary::FindLookAtRotation from ActorOne to ActorTwo, and plug that in as LookAtRotation. ActorOneRotation will be GetActorRotation() from that actor.
-float ACampCharacter::CompareRotRelativeToActor(FRotator ActorOneRotation, FRotator LookAtRotation)
+float ACampCharacter::CompareRotRelativeToActor(const FRotator& ActorOneRotation, const FRotator& LookAtRotation)
 {
 	const float RotDot = FVector::DotProduct(LookAtRotation.Vector(), ActorOneRotation.Vector()); // Get dot product to compare both rotations turned into vectors
 	const float AddedLengths = LookAtRotation.Vector().Length() + ActorOneRotation.Vector().Length(); // Add the length of both vectors together
