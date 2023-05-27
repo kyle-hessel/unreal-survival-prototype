@@ -6,9 +6,8 @@
 #include "MyCampWorldUtilityItem.h"
 #include "CampItemFirepit.generated.h"
 
-/**
- * 
- */
+class UNiagaraComponent;
+
 UCLASS()
 class CAMPFIRESTEST_API ACampItemFirepit final : public AMyCampWorldUtilityItem
 {
@@ -25,4 +24,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Interact")
 	TObjectPtr<UStaticMeshComponent> KindlingMesh;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Effects")
+	TObjectPtr<UNiagaraComponent> CampfireSystem;
 };

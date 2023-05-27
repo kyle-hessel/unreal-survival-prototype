@@ -2,6 +2,7 @@
 
 
 #include "CampItemFirepit.h"
+#include "NiagaraComponent.h"
 
 #include "CampCharacter.h"
 #include "CampInteractionComponent.h"
@@ -12,6 +13,9 @@ ACampItemFirepit::ACampItemFirepit()
 
 	KindlingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KindlingMesh"));
 	KindlingMesh->SetupAttachment(Item);
+
+	CampfireSystem = CreateDefaultSubobject<UNiagaraComponent>(TEXT("CampfireSystem"));
+	CampfireSystem->SetupAttachment(KindlingMesh);
 }
 
 void ACampItemFirepit::Interact_Implementation(APawn* InstigatorPawn)
