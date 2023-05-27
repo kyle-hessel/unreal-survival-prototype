@@ -21,10 +21,11 @@ void ACampItemTent::Interact_Implementation(APawn* InstigatorPawn)
 		if (CampCharacter->GetCampInteractComp()->GetCurrentUtilityItem() == this)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Tent."));
-			
+
+			// this check might be redundant
 			if (CampCharacter->bInAccessBox == true)
 			{
-			
+				
 			}
 		}
 	}

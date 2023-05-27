@@ -32,8 +32,7 @@ void AMyCampWorldUtilityItem::BeginPlay()
 void AMyCampWorldUtilityItem::Interact_Implementation(APawn* InstigatorPawn)
 {
 	UE_LOG(LogTemp, Warning, TEXT("CampWorldUtilityItem"));
-
-	// Spawn an interact menu that lets the player either interact with the item in a meaningful way, OR pick it up.
+	
 	if (const ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 	{
 		if (CampCharacter->GetCampInteractComp()->GetCurrentUtilityItem() != this && CampCharacter->bSitting == false)
