@@ -13,6 +13,9 @@ class CAMPFIRESTEST_API ACampItemFirepit final : public AMyCampWorldUtilityItem
 {
 	GENERATED_BODY()
 
+	// Private variables
+	bool bLit;
+
 public:
 	ACampItemFirepit();
 

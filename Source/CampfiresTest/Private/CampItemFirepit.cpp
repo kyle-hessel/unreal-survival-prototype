@@ -10,12 +10,14 @@
 ACampItemFirepit::ACampItemFirepit()
 {
 	WorldItemIdentifier = 7; // Firepit
+	bLit = false;
 
 	KindlingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KindlingMesh"));
 	KindlingMesh->SetupAttachment(Item);
 
 	CampfireSystem = CreateDefaultSubobject<UNiagaraComponent>(TEXT("CampfireSystem"));
 	CampfireSystem->SetupAttachment(KindlingMesh);
+	CampfireSystem->SetAutoActivate(false);
 }
 
 void ACampItemFirepit::Interact_Implementation(APawn* InstigatorPawn)
@@ -28,9 +30,10 @@ void ACampItemFirepit::Interact_Implementation(APawn* InstigatorPawn)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Firepit."));
 			
-			if (CampCharacter->bInAccessBox == true)
+			if (bBeingAccessed && !bLit)
 			{
-			
+				CampfireSystem->ActivateSystem();
+				bLit = true;
 			}
 		}
 	}
