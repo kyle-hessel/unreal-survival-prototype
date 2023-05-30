@@ -8,6 +8,8 @@
 #include "CampInteractionComponent.h"
 #include "CampInventoryComponent.h"
 #include "CampGameModeBase.h"
+#include "Components/WidgetComponent.h"
+#include "Blueprint/UserWidget.h" 
 
 ACampWorldItem::ACampWorldItem()
 {
@@ -16,12 +18,23 @@ ACampWorldItem::ACampWorldItem()
 	DefaultRoot = CreateDefaultSubobject<USceneComponent>(TEXT("DefaultRoot"));
 	SetRootComponent(DefaultRoot);
 
+	// Item mesh defaults
 	Item = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item"));
 	Item->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	Item->SetCollisionObjectType(ECC_GameTraceChannel4);
 	Item->SetCollisionResponseToAllChannels(ECR_Overlap);
 	Item->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Ignore);
 	Item->SetupAttachment(GetRootComponent());
+
+	// Item icon defaults
+	Icon = CreateDefaultSubobject<UWidgetComponent>(TEXT("Icon"));
+	const FStringClassReference ItemTargetClassRef(TEXT("/Game/CampfiresTest/Blueprints/UI/Interact/WBP_ItemTarget.WBP_ItemTarget_C"));
+	Icon->SetWidgetClass(ItemTargetClassRef.TryLoadClass<UUserWidget>());
+	Icon->SetWidgetSpace(EWidgetSpace::Screen);
+	Icon->SetVisibility(false);
+	Icon->SetHiddenInGame(false);
+	Icon->SetRelativeLocation(FVector(0.0f, 0.0f, 250.0f));
+	Icon->SetupAttachment(GetRootComponent());
 
 	// Set world item defaults, change these per-item in blueprint as necessary.
 	bIsHoldable = true;

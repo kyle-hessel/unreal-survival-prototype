@@ -16,6 +16,7 @@
 #include "CampWorldItem.h"
 #include "MyCampWorldUtilityItem.h"
 #include "Camera/CameraComponent.h"
+#include "Components/BillboardComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
@@ -61,9 +62,16 @@ ACampCharacter::ACampCharacter()
 	CombatSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CombatSphere"));
 	CombatSphere->SetupAttachment(RootComponent);
 	CombatSphere->SetCollisionProfileName("Enemy");
+	ItemSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ItemSphere"));
+	ItemSphere->SetupAttachment(RootComponent);
+	// fix this soon to accompany interactables that do not inherit from ACampWorldItem.
+	ItemSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
+	ItemSphere->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Overlap);
 
 	CombatSphere->OnComponentBeginOverlap.AddDynamic(this, &ACampCharacter::BeginCombatSphereOverlap);
 	CombatSphere->OnComponentEndOverlap.AddDynamic(this, &ACampCharacter::EndCombatSphereOverlap);
+	ItemSphere->OnComponentBeginOverlap.AddDynamic(this, &ACampCharacter::BeginItemSphereOverlap);
+	ItemSphere->OnComponentEndOverlap.AddDynamic(this, &ACampCharacter::EndItemSphereOverlap);
 
 	// Set default acceleration rate for transitioning into sprint
 	AccelerationRate = 8.0f;
@@ -363,17 +371,74 @@ void ACampCharacter::EndCombatSphereOverlap(UPrimitiveComponent* OverlappedComp,
 	}
 }
 
+void ACampCharacter::BeginItemSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (ACampWorldItem* NearbyItem = Cast<ACampWorldItem>(OtherActor))
+	{
+		if (NearbyItems.IsEmpty())
+		{
+			NearbyItem->Icon->SetVisibility(true);
+			TargetedItem = NearbyItem;
+			UE_LOG(LogTemp, Warning, TEXT("Item targeted."))
+		}
+		
+		NearbyItems.Add(NearbyItem);
+	}
+}
+
+void ACampCharacter::EndItemSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (const ACampWorldItem* ExitingItem = Cast<ACampWorldItem>(OtherActor))
+	{
+		if (ExitingItem == TargetedItem)
+		{
+			ExitingItem->Icon->SetVisibility(false);
+			TargetedItem == nullptr;
+		}
+		
+		NearbyItems.Remove(ExitingItem);
+	}
+}
+
+void ACampCharacter::SortNearbyItemsByDistance()
+{
+	// Sort through the TMap of enemy items and populate all of their Values with their current distance from the player.
+	for (auto& Item : NearbyItems)
+	{
+		FVector ItemLocLateral = FVector(Item.Key->GetActorLocation().X, Item.Key->GetActorLocation().Y, 0.f);
+		FVector PlayerLocLateral = FVector(GetActorLocation().X, GetActorLocation().Y, 0.f);
+		FVector DistanceToItemVec = ItemLocLateral - PlayerLocLateral;
+		const float DistanceToItem = DistanceToItemVec.Length();
+		UE_LOG(LogTemp, Display, TEXT("Distance to item: %f"), DistanceToItem);
+		
+		Item.Value = DistanceToItem;
+	}
+
+	// Sort the TMap of items by distance to player from lowest to highest.
+	NearbyItems.ValueSort([](const float A, const float B)
+	{
+		return A < B;
+	});
+
+	// *** DEBUG ONLY, comment out later
+	for (auto& Item : NearbyItems)
+	{
+		UE_LOG(LogTemp, Display, TEXT("New item distance: %f"), Item.Value);
+	}
+}
+
+
 void ACampCharacter::SortEnemiesByDistance()
 {
-	TArray<ACampEnemyBase> NearbyEnemiesSortedByDistance;
-	
 	// Sort through the TMap of enemy Keys and populate all of their Values with their current distance from the player.
 	for (auto& Enemy : NearbyEnemies)
 	{
 		FVector EnemyLocLateral = FVector(Enemy.Key->GetActorLocation().X, Enemy.Key->GetActorLocation().Y, 0.f);
 		FVector PlayerLocLateral = FVector(GetActorLocation().X, GetActorLocation().Y, 0.f);
 		FVector DistanceToEnemyVec = EnemyLocLateral - PlayerLocLateral;
-		float DistanceToEnemy = DistanceToEnemyVec.Length();
+		const float DistanceToEnemy = DistanceToEnemyVec.Length();
 		UE_LOG(LogTemp, Display, TEXT("Distance to enemy: %f"), DistanceToEnemy);
 
 		Enemy.Value = DistanceToEnemy;

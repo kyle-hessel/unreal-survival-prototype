@@ -17,6 +17,7 @@ class UCampInventoryComponent;
 class ACampCampsite;
 class ACampMeleeWeapon;
 class ACampEnemyBase;
+class ACampWorldItem;
 class AMyCampWorldUtilityItem;
 
 UCLASS()
@@ -27,6 +28,12 @@ class CAMPFIRESTEST_API ACampCharacter : public ACharacter
 	/*
 	 * Private component declarations for CampCharacter
 	*/
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interact", meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<USphereComponent> ItemSphere;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Interact", meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<ACampWorldItem> TargetedItem;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components | Attributes", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UCampAttributeComponent> AttributeComp;
@@ -57,6 +64,9 @@ class CAMPFIRESTEST_API ACampCharacter : public ACharacter
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
 	TMap<ACampEnemyBase*, float> NearbyEnemies;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
+	TMap<ACampWorldItem*, float> NearbyItems;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<ACampEnemyBase> LockedOnEnemy;
@@ -100,7 +110,13 @@ public:
 	FORCEINLINE ACampEnemyBase* GetLockedOnEnemy() const { if (LockedOnEnemy) return LockedOnEnemy; return nullptr; }
 
 	UFUNCTION(BlueprintPure)
+	FORCEINLINE ACampWorldItem* GetTargetedItem() const { if (TargetedItem) return TargetedItem; return nullptr; }
+
+	UFUNCTION(BlueprintPure)
 	FORCEINLINE TMap<ACampEnemyBase*, float> GetNearbyEnemies() const { return NearbyEnemies; }
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE TMap<ACampWorldItem*, float> GetNearbyItems() const { return NearbyItems; }
 
 	/*
 	 * Setters
@@ -302,7 +318,14 @@ public:
 	void BeginCombatSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	void EndCombatSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	UFUNCTION()
+	void BeginItemSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+	void EndItemSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION(Category = "Interact")
+	void SortNearbyItemsByDistance();
+	
 	UFUNCTION(Category = "Combat")
 	void SortEnemiesByDistance();
 

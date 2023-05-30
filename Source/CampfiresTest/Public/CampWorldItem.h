@@ -9,6 +9,7 @@
 
 enum class EItemType : uint8;
 class UStaticMeshComponent;
+class UWidgetComponent;
 class ACampCharacter;
 
 // Generic parent class for any item in the world that the player can interact with that isn't a backpack or campsite (for now).
@@ -27,6 +28,9 @@ public:
 	// Generic item mesh, can be anything really.
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Mesh")
 	TObjectPtr<UStaticMeshComponent> Item;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
+	TObjectPtr<UWidgetComponent> Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attributes")
 	int32 ItemID;

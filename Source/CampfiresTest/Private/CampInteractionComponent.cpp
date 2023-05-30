@@ -48,12 +48,9 @@ void UCampInteractionComponent::PrimaryInteract()
 	}
 
 	// Only look for melee weapons (isolated to GameTraceChannel2) if we don't have a melee weapon equipped.
-	if (CampCharacter)
+	if (CampCharacter->GetActiveMeleeWeapon() == nullptr)
 	{
-		if (CampCharacter->GetActiveMeleeWeapon() == nullptr)
-		{
-			ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
-		}
+		ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
 	}
 
 	// Always query for WorldStatic objects and Items regardless.
