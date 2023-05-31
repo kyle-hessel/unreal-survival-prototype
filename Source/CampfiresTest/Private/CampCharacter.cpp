@@ -16,7 +16,6 @@
 #include "CampWorldItem.h"
 #include "MyCampWorldUtilityItem.h"
 #include "Camera/CameraComponent.h"
-#include "Components/BillboardComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
@@ -301,10 +300,8 @@ void ACampCharacter::Jump()
 void ACampCharacter::BeginCombatSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	ACampEnemyBase* NearbyEnemy = Cast<ACampEnemyBase>(OtherActor);
-
 	// ***Add a toggle for auto lock-on later, as it may not be desirable for some players.
-	if (NearbyEnemy)
+	if (ACampEnemyBase* NearbyEnemy = Cast<ACampEnemyBase>(OtherActor))
 	{
 		// Don't add dead enemies.
 		if (NearbyEnemy->bDead == false)
@@ -330,9 +327,7 @@ void ACampCharacter::BeginCombatSphereOverlap(UPrimitiveComponent* OverlappedCom
 void ACampCharacter::EndCombatSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	ACampEnemyBase* ExitingEnemy = Cast<ACampEnemyBase>(OtherActor);
-
-	if (ExitingEnemy)
+	if (ACampEnemyBase* ExitingEnemy = Cast<ACampEnemyBase>(OtherActor))
 	{
 		if (ExitingEnemy->bDead == false)
 		{
@@ -376,14 +371,27 @@ void ACampCharacter::BeginItemSphereOverlap(UPrimitiveComponent* OverlappedComp,
 {
 	if (ACampWorldItem* NearbyItem = Cast<ACampWorldItem>(OtherActor))
 	{
-		if (NearbyItems.IsEmpty())
+		NearbyItems.Add(NearbyItem);
+		
+		if (NearbyItems.Num() <= 1)
 		{
-			NearbyItem->Icon->SetVisibility(true);
 			TargetedItem = NearbyItem;
+			TargetedItem->Icon->SetVisibility(true);
 			UE_LOG(LogTemp, Warning, TEXT("Item targeted."))
 		}
-		
-		NearbyItems.Add(NearbyItem);
+		else
+		{
+			SortNearbyItemsByDistance();
+			TArray<ACampWorldItem*> NearbyItemsKeys;
+			NearbyItems.GenerateKeyArray(NearbyItemsKeys);
+
+			if (TargetedItem != NearbyItemsKeys[0])
+			{
+				TargetedItem->Icon->SetVisibility(false);
+				TargetedItem = NearbyItemsKeys[0];
+				TargetedItem->Icon->SetVisibility(true);
+			}
+		}
 	}
 }
 
@@ -392,13 +400,25 @@ void ACampCharacter::EndItemSphereOverlap(UPrimitiveComponent* OverlappedComp, A
 {
 	if (const ACampWorldItem* ExitingItem = Cast<ACampWorldItem>(OtherActor))
 	{
+		NearbyItems.Remove(ExitingItem);
+		
 		if (ExitingItem == TargetedItem)
 		{
 			ExitingItem->Icon->SetVisibility(false);
-			TargetedItem == nullptr;
+
+			if (NearbyItems.Num() > 0)
+			{
+				SortNearbyItemsByDistance();
+				TArray<ACampWorldItem*> NearbyItemsKeys;
+				NearbyItems.GenerateKeyArray(NearbyItemsKeys);
+				TargetedItem = NearbyItemsKeys[0];
+				TargetedItem->Icon->SetVisibility(true);
+			}
+			else
+			{
+				TargetedItem = nullptr;
+			}
 		}
-		
-		NearbyItems.Remove(ExitingItem);
 	}
 }
 

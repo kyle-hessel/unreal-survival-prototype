@@ -128,6 +128,9 @@ public:
 	FORCEINLINE void SetActiveContainer(AActor* Container) { ActiveContainerObject = Container; }
 
 	UFUNCTION(BlueprintCallable)
+	FORCEINLINE void SetTargetedItem(ACampWorldItem* NewTarget) { TargetedItem = NewTarget; }
+
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetActiveContainerInventoryComp(UCampInventoryComponent* NewInventoryComp) { ActiveContainerInventoryComp = NewInventoryComp; }
 
 	FORCEINLINE void RemoveNearbyEnemy(const ACampEnemyBase* Enemy) { NearbyEnemies.Remove(Enemy); }

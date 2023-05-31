@@ -11,6 +11,7 @@
 #include "CampWorldItem.h"
 #include "DrawDebugHelpers.h"
 #include "MyCampWorldUtilityItem.h"
+#include "Components/WidgetComponent.h"
 #include "Engine/StaticMeshSocket.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -38,6 +39,29 @@ void UCampInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 // Triggered when interact key is pressed, checks for a collision with an interactable object and then decides what to do with said object.
 void UCampInteractionComponent::PrimaryInteract()
 {
+	if (ACampWorldItem* TargetedItem = Cast<ACampWorldItem>(CampCharacter->GetTargetedItem()); TargetedItem->IsA(ACampWorldItem::StaticClass()))
+	{
+		// For some reason Execute_Interact function doesn't like the below function call being plugged directly in.
+		if (Cast<APawn>(GetOwner())) ICampInteractionInterface::Execute_Interact(TargetedItem, Cast<APawn>(GetOwner()));
+
+		// Item is being consumed, so no need to disable its icon. That will happen automatically with actor deletion.
+		CampCharacter->GetNearbyItems().Remove(TargetedItem);
+
+		if (CampCharacter->GetNearbyItems().Num() > 0)
+		{
+			CampCharacter->SortNearbyItemsByDistance();
+			TArray<ACampWorldItem*> NearbyItemsKeys;
+			CampCharacter->GetNearbyItems().GenerateKeyArray(NearbyItemsKeys);
+			CampCharacter->SetTargetedItem(NearbyItemsKeys[0]);
+			NearbyItemsKeys[0]->Icon->SetVisibility(true);
+		}
+		else
+		{
+			CampCharacter->SetTargetedItem(nullptr);
+		}
+	}
+	/*
+	// *** OLD INTERACT CODE
 	// Set query parameters for collision trace
 	FCollisionObjectQueryParams ObjectQueryParams;
 
@@ -97,15 +121,12 @@ void UCampInteractionComponent::PrimaryInteract()
 			}
 
 			// If item is a AMyCampWorldUtilityItem, (maybe do something in the future here lul)
-			/*
-			if (HitActor->IsA(AMyCampWorldUtilityItem::StaticClass()))
-			{
-			}
-			*/
+			//if (HitActor->IsA(AMyCampWorldUtilityItem::StaticClass()))
+			//{
+			//}
 			
-			/* Lastly, call the interface's Interact function on the HitActor that we collided with during our trace,
-			 * and pass in our owning Actor (casted to a Pawn) firing the trace as the Instigator.
-			*/
+			// Lastly, call the interface's Interact function on the HitActor that we collided with during our trace,
+			// and pass in our owning Actor (casted to a Pawn) firing the trace as the Instigator.
 			if (Cast<APawn>(GetOwner())) ICampInteractionInterface::Execute_Interact(HitActor, Cast<APawn>(GetOwner()));
 
 			
@@ -141,6 +162,7 @@ void UCampInteractionComponent::PrimaryInteract()
 	
 	DrawDebugLine(GetWorld(), EyeLocation, EndLoc, LineColor, false, 3.0f, 0, 2.0f);
 	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 30.0f, 32, LineColor, false, 3.0f, 0, 1.5f);
+	*/
 }
 
 // Called by CampCharacter when the Drop key is pressed.

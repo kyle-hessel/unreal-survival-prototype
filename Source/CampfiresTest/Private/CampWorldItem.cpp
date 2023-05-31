@@ -33,7 +33,7 @@ ACampWorldItem::ACampWorldItem()
 	Icon->SetWidgetSpace(EWidgetSpace::Screen);
 	Icon->SetVisibility(false);
 	Icon->SetHiddenInGame(false);
-	Icon->SetRelativeLocation(FVector(0.0f, 0.0f, 250.0f));
+	Icon->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 	Icon->SetupAttachment(GetRootComponent());
 
 	// Set world item defaults, change these per-item in blueprint as necessary.
