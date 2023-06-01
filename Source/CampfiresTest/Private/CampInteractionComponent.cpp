@@ -4,7 +4,6 @@
 #include "CampInteractionComponent.h"
 
 #include "CampBackpack.h"
-#include "CampCampsite.h"
 #include "CampCharacter.h"
 #include "CampInteractionInterface.h"
 #include "CampInventoryComponent.h"
@@ -39,27 +38,15 @@ void UCampInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 // Triggered when interact key is pressed, checks for a collision with an interactable object and then decides what to do with said object.
 void UCampInteractionComponent::PrimaryInteract()
 {
-	if (ACampWorldItem* TargetedItem = Cast<ACampWorldItem>(CampCharacter->GetTargetedItem()); TargetedItem->IsA(ACampWorldItem::StaticClass()))
+	// If the targeted object isn't a utility item, just pick it up.
+	if (ACampWorldItem* TargetedItem = CampCharacter->GetTargetedItem())
 	{
-		// For some reason Execute_Interact function doesn't like the below function call being plugged directly in.
+		// For some reason Execute_Interact function doesn't like the above function call to GetTargetedItem being plugged directly in, hence the cast.
+		// Nothing else needs to be done here; if an item is picked up, CampCharacter's EndItemSphereOverlap function is triggered which handles cleanup.
+		// Further, the inheritance hierarchy of utility items handles their own interactions. Yay for half decent code I wrote months ago!
 		if (Cast<APawn>(GetOwner())) ICampInteractionInterface::Execute_Interact(TargetedItem, Cast<APawn>(GetOwner()));
-
-		// Item is being consumed, so no need to disable its icon. That will happen automatically with actor deletion.
-		CampCharacter->GetNearbyItems().Remove(TargetedItem);
-
-		if (CampCharacter->GetNearbyItems().Num() > 0)
-		{
-			CampCharacter->SortNearbyItemsByDistance();
-			TArray<ACampWorldItem*> NearbyItemsKeys;
-			CampCharacter->GetNearbyItems().GenerateKeyArray(NearbyItemsKeys);
-			CampCharacter->SetTargetedItem(NearbyItemsKeys[0]);
-			NearbyItemsKeys[0]->Icon->SetVisibility(true);
-		}
-		else
-		{
-			CampCharacter->SetTargetedItem(nullptr);
-		}
 	}
+	
 	/*
 	// *** OLD INTERACT CODE
 	// Set query parameters for collision trace

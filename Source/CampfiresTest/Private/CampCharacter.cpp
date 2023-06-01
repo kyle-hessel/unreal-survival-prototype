@@ -401,6 +401,7 @@ void ACampCharacter::EndItemSphereOverlap(UPrimitiveComponent* OverlappedComp, A
 	if (const ACampWorldItem* ExitingItem = Cast<ACampWorldItem>(OtherActor))
 	{
 		NearbyItems.Remove(ExitingItem);
+		UE_LOG(LogTemp, Warning, TEXT("Ayo"));
 		
 		if (ExitingItem == TargetedItem)
 		{
