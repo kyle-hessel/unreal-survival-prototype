@@ -369,27 +369,37 @@ void ACampCharacter::EndCombatSphereOverlap(UPrimitiveComponent* OverlappedComp,
 void ACampCharacter::BeginItemSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (ACampWorldItem* NearbyItem = Cast<ACampWorldItem>(OtherActor))
+	// build on this - the below is just for testing.
+	// I was getting memory access errors, I believe due to the blueprints not being refreshed with the new InteractIcon. I guess that can cause huge bugs, the more you know.
+	if (OtherActor->IsA(AMyCampWorldUtilityItem::StaticClass()))
 	{
-		NearbyItems.Add(NearbyItem);
+		AMyCampWorldUtilityItem* NearbyUtilityItem = Cast<AMyCampWorldUtilityItem>(OtherActor);
+		NearbyUtilityItem->InteractIcon->SetVisibility(true);
+	}
+	else
+	{
+		if (ACampWorldItem* NearbyItem = Cast<ACampWorldItem>(OtherActor))
+		{
+			NearbyItems.Add(NearbyItem);
 		
-		if (NearbyItems.Num() <= 1)
-		{
-			TargetedItem = NearbyItem;
-			TargetedItem->Icon->SetVisibility(true);
-			UE_LOG(LogTemp, Warning, TEXT("Item targeted."))
-		}
-		else
-		{
-			SortNearbyItemsByDistance();
-			TArray<ACampWorldItem*> NearbyItemsKeys;
-			NearbyItems.GenerateKeyArray(NearbyItemsKeys);
-
-			if (TargetedItem != NearbyItemsKeys[0])
+			if (NearbyItems.Num() <= 1)
 			{
-				TargetedItem->Icon->SetVisibility(false);
-				TargetedItem = NearbyItemsKeys[0];
+				TargetedItem = NearbyItem;
 				TargetedItem->Icon->SetVisibility(true);
+				UE_LOG(LogTemp, Warning, TEXT("Item targeted."))
+			}
+			else
+			{
+				SortNearbyItemsByDistance();
+				TArray<ACampWorldItem*> NearbyItemsKeys;
+				NearbyItems.GenerateKeyArray(NearbyItemsKeys);
+
+				if (TargetedItem != NearbyItemsKeys[0])
+				{
+					TargetedItem->Icon->SetVisibility(false);
+					TargetedItem = NearbyItemsKeys[0];
+					TargetedItem->Icon->SetVisibility(true);
+				}
 			}
 		}
 	}
@@ -1124,7 +1134,7 @@ bool ACampCharacter::SpawnUtilityItem(const FName ItemName)
 		SpawnedItem->bLifeForceItem = NewItemData->bLifeForceItem;
 		SpawnedItem->LifeForceDelta = NewItemData->LifeForceDelta;
 
-		FVector OriginalActorLocation = SpawnedItem->GetActorLocation();
+		//FVector OriginalActorLocation = SpawnedItem->GetActorLocation();
 		// Positions the newly spawned item, based on its own implementation of the below interface.
 		ICampItemPlacementInterface::Execute_OrientItem(SpawnedItem, GetActorRotation());
 

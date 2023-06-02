@@ -8,6 +8,7 @@
 #include "CampInteractionComponent.h"
 #include "CampWorldItem.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 
 AMyCampWorldUtilityItem::AMyCampWorldUtilityItem()
 {
@@ -22,6 +23,16 @@ AMyCampWorldUtilityItem::AMyCampWorldUtilityItem()
 
 	AccessBox->OnComponentBeginOverlap.AddDynamic(this, &AMyCampWorldUtilityItem::BeginBoxOverlap);
 	AccessBox->OnComponentEndOverlap.AddDynamic(this, &AMyCampWorldUtilityItem::EndBoxOverlap);
+
+	// Interact icon defaults
+	InteractIcon = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractIcon"));
+	const FStringClassReference UtilityItemTargetClassRef(TEXT("/Game/CampfiresTest/Blueprints/UI/Interact/WBP_UtilityItemTarget.WBP_UtilityItemTarget_C"));
+	InteractIcon->SetWidgetClass(UtilityItemTargetClassRef.TryLoadClass<UUserWidget>());
+	InteractIcon->SetWidgetSpace(EWidgetSpace::Screen);
+	InteractIcon->SetVisibility(false);
+	InteractIcon->SetHiddenInGame(false);
+	InteractIcon->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
+	InteractIcon->SetupAttachment(GetRootComponent());
 }
 
 void AMyCampWorldUtilityItem::BeginPlay()

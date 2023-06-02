@@ -41,7 +41,6 @@ void UCampInteractionComponent::PrimaryInteract()
 	// If the targeted object isn't a utility item, just pick it up.
 	if (ACampWorldItem* TargetedItem = CampCharacter->GetTargetedItem())
 	{
-		// For some reason Execute_Interact function doesn't like the above function call to GetTargetedItem being plugged directly in, hence the cast.
 		// Nothing else needs to be done here; if an item is picked up, CampCharacter's EndItemSphereOverlap function is triggered which handles cleanup.
 		// Further, the inheritance hierarchy of utility items handles their own interactions. Yay for half decent code I wrote months ago!
 		if (Cast<APawn>(GetOwner())) ICampInteractionInterface::Execute_Interact(TargetedItem, Cast<APawn>(GetOwner()));
