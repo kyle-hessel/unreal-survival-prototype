@@ -28,8 +28,6 @@ ACampWorldItem::ACampWorldItem()
 
 	// Item icon defaults
 	Icon = CreateDefaultSubobject<UWidgetComponent>(TEXT("Icon"));
-	const FStringClassReference ItemTargetClassRef(TEXT("/Game/CampfiresTest/Blueprints/UI/Interact/WBP_ItemTarget.WBP_ItemTarget_C"));
-	Icon->SetWidgetClass(ItemTargetClassRef.TryLoadClass<UUserWidget>());
 	Icon->SetWidgetSpace(EWidgetSpace::Screen);
 	Icon->SetVisibility(false);
 	Icon->SetHiddenInGame(false);
@@ -55,8 +53,9 @@ void ACampWorldItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// I think I can just refactor this to use WorldItemName instead of this array and WorldItemIdentifier, just have a default value for the former and use that to find the row.
+	Icon->SetWidgetClass(IconClass);
 	
+	// I think I can just refactor this to use WorldItemName instead of this array and WorldItemIdentifier, just have a default value for the former and use that to find the row.
 	// Set item parameters fetched from the Items data table.
 	TArray<FName> RowNames = Items->GetRowNames();
 	const FItemStruct* NewItemData = Items->FindRow<FItemStruct>(RowNames[WorldItemIdentifier], "Create", true);

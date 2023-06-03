@@ -8,6 +8,7 @@
 #include "MyCampWorldUtilityItem.generated.h"
 
 class UBoxComponent;
+class UUserWidget;
 
 /**
  * 
@@ -22,6 +23,9 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Access")
 	TObjectPtr<UBoxComponent> AccessBox;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> InteractIconClass;
 
 protected:
 	virtual void BeginPlay() override;

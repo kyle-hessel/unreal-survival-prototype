@@ -63,6 +63,8 @@ void AMyCampWorldUtilityItem::BeginBoxOverlap(UPrimitiveComponent* OverlappedCom
 			CampCharacter->bInAccessBox = true;
 			bBeingAccessed = true;
 			CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(this);
+			
+			Icon->SetWidgetClass(InteractIconClass);
 		}
 	}
 }
@@ -79,6 +81,8 @@ void AMyCampWorldUtilityItem::EndBoxOverlap(UPrimitiveComponent* OverlappedComp,
 			CampCharacter->bInAccessBox = false;
 			bBeingAccessed = false;
 			CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(nullptr);
+			
+			Icon->SetWidgetClass(IconClass);
 		}
 	}
 }
