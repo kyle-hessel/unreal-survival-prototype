@@ -23,9 +23,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "Access")
 	TObjectPtr<UBoxComponent> AccessBox;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
-	TObjectPtr<UWidgetComponent> InteractIcon;
-
 protected:
 	virtual void BeginPlay() override;
 
