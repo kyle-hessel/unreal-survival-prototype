@@ -36,9 +36,16 @@ void AMyCampWorldUtilityItem::Interact_Implementation(APawn* InstigatorPawn)
 	
 	if (const ACampCharacter* CampCharacter = Cast<ACampCharacter>(InstigatorPawn))
 	{
+		// If this utility item isn't the player's current utility item (meaning we're not in the access box) just pick it up.
+		// Probably would be faster here to just check if bInAccessBox is true instead of checking the utility item itself. Not sure if there's a reason I did it this way.
 		if (CampCharacter->GetCampInteractComp()->GetCurrentUtilityItem() != this && CampCharacter->bSitting == false)
 		{
 			Super::Interact_Implementation(InstigatorPawn); // Calls ACampWorldItem Interact, which adds item to player's inventory.
+		}
+
+		if (CampCharacter->bInAccessBox)
+		{
+			Icon->SetVisibility(false);
 		}
 	}
 }
@@ -83,6 +90,11 @@ void AMyCampWorldUtilityItem::EndBoxOverlap(UPrimitiveComponent* OverlappedComp,
 			CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(nullptr);
 			
 			Icon->SetWidgetClass(IconClass);
+			
+			if (CampCharacter->GetTargetedItem() == this)
+			{
+				Icon->SetVisibility(true);
+			}
 		}
 	}
 }
