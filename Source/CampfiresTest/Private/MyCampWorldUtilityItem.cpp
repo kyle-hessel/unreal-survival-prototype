@@ -43,7 +43,7 @@ void AMyCampWorldUtilityItem::Interact_Implementation(APawn* InstigatorPawn)
 	}
 }
 
-void AMyCampWorldUtilityItem::OrientItem_Implementation(FRotator PlayerRotation)
+void AMyCampWorldUtilityItem::OrientItem_Implementation(const FRotator PlayerRotation)
 {
 	ICampItemPlacementInterface::OrientItem_Implementation(PlayerRotation);
 	
@@ -63,10 +63,6 @@ void AMyCampWorldUtilityItem::BeginBoxOverlap(UPrimitiveComponent* OverlappedCom
 			CampCharacter->bInAccessBox = true;
 			bBeingAccessed = true;
 			CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(this);
-
-			// Change targeting icon when entering box. This could even be used for custom icons for each type of utility item!
-			const FStringClassReference UtilityItemTargetClassRef(TEXT("/Game/CampfiresTest/Blueprints/UI/Interact/WBP_UtilityItemTarget.WBP_UtilityItemTarget_C"));
-			Icon->SetWidgetClass(UtilityItemTargetClassRef.TryLoadClass<UUserWidget>());
 		}
 	}
 }
@@ -83,10 +79,6 @@ void AMyCampWorldUtilityItem::EndBoxOverlap(UPrimitiveComponent* OverlappedComp,
 			CampCharacter->bInAccessBox = false;
 			bBeingAccessed = false;
 			CampCharacter->GetCampInteractComp()->SetCurrentUtilityItem(nullptr);
-
-			// Change targeting icon back to normal when leaving box.
-			const FStringClassReference ItemTargetClassRef(TEXT("/Game/CampfiresTest/Blueprints/UI/Interact/WBP_ItemTarget.WBP_ItemTarget_C"));
-			Icon->SetWidgetClass(ItemTargetClassRef.TryLoadClass<UUserWidget>());
 		}
 	}
 }
