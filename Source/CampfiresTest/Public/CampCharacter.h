@@ -15,6 +15,7 @@ class UCampActionComponent;
 class UCampInteractionComponent;
 class UCampInventoryComponent;
 class ACampCampsite;
+class ACampBackpack;
 class ACampMeleeWeapon;
 class ACampEnemyBase;
 class ACampWorldItem;
@@ -34,6 +35,9 @@ class CAMPFIRESTEST_API ACampCharacter : public ACharacter
 
 	UPROPERTY(BlueprintReadOnly, Category = "Interact", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<ACampWorldItem> TargetedItem;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Interact", meta=(AllowPrivateAccess = "true"))
+	TObjectPtr<AActor> TargetedEquipable;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components | Attributes", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UCampAttributeComponent> AttributeComp;
@@ -65,8 +69,11 @@ class CAMPFIRESTEST_API ACampCharacter : public ACharacter
 	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
 	TMap<ACampEnemyBase*, float> NearbyEnemies;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadOnly, Category = "Interact", meta=(AllowPrivateAccess = "true"))
 	TMap<ACampWorldItem*, float> NearbyItems;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Interact", meta=(AllowPrivateAccess = "true"))
+	TMap<AActor*, float> NearbyEquipables; // This includes weapons as well, using equipables as a general term here contrary to collision layers, since the usage is a bit different.
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<ACampEnemyBase> LockedOnEnemy;
@@ -328,6 +335,9 @@ public:
 
 	UFUNCTION(Category = "Interact")
 	void SortNearbyItemsByDistance();
+
+	UFUNCTION(Category = "Interact")
+	void SortNearbyEquipablesByDistance();
 	
 	UFUNCTION(Category = "Combat")
 	void SortEnemiesByDistance();

@@ -6,6 +6,7 @@
 #include "CampActionAttack.h"
 #include "CampActionComponent.h"
 #include "CampAttributeComponent.h"
+#include "CampBackpack.h"
 #include "CampEnemyBase.h"
 #include "CampGameModeBase.h"
 #include "CampInteractionComponent.h"
@@ -63,10 +64,11 @@ ACampCharacter::ACampCharacter()
 	CombatSphere->SetCollisionProfileName("Enemy");
 	ItemSphere = CreateDefaultSubobject<USphereComponent>(TEXT("ItemSphere"));
 	ItemSphere->SetupAttachment(RootComponent);
-	// fix this soon to accompany interactables that do not inherit from ACampWorldItem.
 	ItemSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
-	ItemSphere->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Overlap);
-
+	ItemSphere->SetCollisionResponseToChannel(ECC_GameTraceChannel4, ECR_Overlap); // items
+	ItemSphere->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Overlap); // backpacks
+	ItemSphere->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Overlap); // weapons
+	
 	CombatSphere->OnComponentBeginOverlap.AddDynamic(this, &ACampCharacter::BeginCombatSphereOverlap);
 	CombatSphere->OnComponentEndOverlap.AddDynamic(this, &ACampCharacter::EndCombatSphereOverlap);
 	ItemSphere->OnComponentBeginOverlap.AddDynamic(this, &ACampCharacter::BeginItemSphereOverlap);
@@ -369,6 +371,7 @@ void ACampCharacter::EndCombatSphereOverlap(UPrimitiveComponent* OverlappedComp,
 void ACampCharacter::BeginItemSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// World and utility items
 	if (ACampWorldItem* NearbyItem = Cast<ACampWorldItem>(OtherActor))
 	{
 		NearbyItems.Add(NearbyItem);
@@ -393,12 +396,71 @@ void ACampCharacter::BeginItemSphereOverlap(UPrimitiveComponent* OverlappedComp,
 			}
 		}
 	}
-	
+	// Equipables (backpacks, weapons)
+	else
+	{
+		if (OtherActor->IsA(ACampBackpack::StaticClass()) || OtherActor->IsA(ACampMeleeWeapon::StaticClass()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Equipable!"));
+			NearbyEquipables.Add(OtherActor);
+
+			if (NearbyEquipables.Num() <= 1)
+			{
+				TargetedEquipable = OtherActor;
+				if (OtherActor->IsA(ACampBackpack::StaticClass()))
+				{
+					ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(OtherActor);
+					TargetedBackpack->Icon->SetVisibility(true);
+				}
+				else if (OtherActor->IsA(ACampMeleeWeapon::StaticClass()))
+				{
+					ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(OtherActor);
+					TargetedWeapon->Icon->SetVisibility(true);
+				}
+			}
+			else
+			{
+				SortNearbyEquipablesByDistance();
+				TArray<AActor*> NearbyEquipablesKeys;
+				NearbyEquipables.GenerateKeyArray(NearbyEquipablesKeys);
+
+				// There's a lot of redundant ifs here, don't overthink it. Has to do with accompanying for this array holding EITHER a backpack type or a melee weapon type.
+				// If later I made all of these children of one overarching parent equipable class, this would be a lot cleaner (and I should probably do that!)
+				if (TargetedEquipable != NearbyEquipablesKeys[0])
+				{
+					if (TargetedEquipable->IsA(ACampBackpack::StaticClass()))
+					{
+						ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(TargetedEquipable);
+						TargetedBackpack->Icon->SetVisibility(false);
+					}
+					else if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()))
+					{
+						ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(TargetedEquipable);
+						TargetedWeapon->Icon->SetVisibility(false);
+					}
+
+					TargetedEquipable = NearbyEquipablesKeys[0];
+
+					if (TargetedEquipable->IsA(ACampBackpack::StaticClass()))
+					{
+						ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(TargetedEquipable);
+						TargetedBackpack->Icon->SetVisibility(true);
+					}
+					else if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()))
+					{
+						ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(TargetedEquipable);
+						TargetedWeapon->Icon->SetVisibility(true);
+					}
+				}
+			}
+		}
+	}
 }
 
 void ACampCharacter::EndItemSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	// World and utility items
 	if (const ACampWorldItem* ExitingItem = Cast<ACampWorldItem>(OtherActor))
 	{
 		NearbyItems.Remove(ExitingItem);
@@ -421,11 +483,57 @@ void ACampCharacter::EndItemSphereOverlap(UPrimitiveComponent* OverlappedComp, A
 			}
 		}
 	}
+	// Equipables (backpacks, weapons)
+	else
+	{
+		if (OtherActor->IsA(ACampBackpack::StaticClass()) || OtherActor->IsA(ACampMeleeWeapon::StaticClass()))
+		{
+			NearbyEquipables.Remove(OtherActor);
+
+			// Same as the above function, all this could be cleaner (and should be) in the future with the right inheritance hierarchy.
+			if (OtherActor == TargetedEquipable)
+			{
+				if (TargetedEquipable->IsA(ACampBackpack::StaticClass()))
+				{
+					ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(TargetedEquipable);
+					TargetedBackpack->Icon->SetVisibility(false);
+				}
+				else if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()))
+				{
+					ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(TargetedEquipable);
+					TargetedWeapon->Icon->SetVisibility(false);
+				}
+
+				if (NearbyEquipables.Num() > 0)
+				{
+					SortNearbyEquipablesByDistance();
+					TArray<AActor*> NearbyEquipablesKeys;
+					NearbyEquipables.GenerateKeyArray(NearbyEquipablesKeys);
+					TargetedEquipable = NearbyEquipablesKeys[0];
+
+					if (TargetedEquipable->IsA(ACampBackpack::StaticClass()))
+					{
+						ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(TargetedEquipable);
+						TargetedBackpack->Icon->SetVisibility(true);
+					}
+					else if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()))
+					{
+						ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(TargetedEquipable);
+						TargetedWeapon->Icon->SetVisibility(true);
+					}
+				}
+				else
+				{
+					TargetedEquipable = nullptr;
+				}
+			}
+		}
+	}
 }
 
 void ACampCharacter::SortNearbyItemsByDistance()
 {
-	// Sort through the TMap of enemy items and populate all of their Values with their current distance from the player.
+	// Sort through the TMap of items and populate all of their Values with their current distance from the player.
 	for (auto& Item : NearbyItems)
 	{
 		FVector ItemLocLateral = FVector(Item.Key->GetActorLocation().X, Item.Key->GetActorLocation().Y, 0.f);
@@ -447,6 +555,33 @@ void ACampCharacter::SortNearbyItemsByDistance()
 	for (auto& Item : NearbyItems)
 	{
 		UE_LOG(LogTemp, Display, TEXT("New item distance: %f"), Item.Value);
+	}
+}
+
+void ACampCharacter::SortNearbyEquipablesByDistance()
+{
+	// Sort through the TMap of equipables and populate all of their Values with their current distance from the player.
+	for (auto& Equipable : NearbyEquipables)
+	{
+		FVector EquipableLocLateral = FVector(Equipable.Key->GetActorLocation().X, Equipable.Key->GetActorLocation().Y, 0.f);
+		FVector PlayerLocLateral = FVector(GetActorLocation().X, GetActorLocation().Y, 0.f);
+		FVector DistanceToItemVec = EquipableLocLateral - PlayerLocLateral;
+		const float DistanceToEquipable = DistanceToItemVec.Length();
+		UE_LOG(LogTemp, Display, TEXT("Distance to item: %f"), DistanceToEquipable);
+		
+		Equipable.Value = DistanceToEquipable;
+	}
+
+	// Sort the TMap of items by distance to player from lowest to highest.
+	NearbyEquipables.ValueSort([](const float A, const float B)
+	{
+		return A < B;
+	});
+
+	// *** DEBUG ONLY, comment out later
+	for (auto& Equipable : NearbyEquipables)
+	{
+		UE_LOG(LogTemp, Display, TEXT("New item distance: %f"), Equipable.Value);
 	}
 }
 

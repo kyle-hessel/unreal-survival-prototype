@@ -9,6 +9,7 @@
 #include "CampCharacter.h"
 #include "CampEnemyBase.h"
 #include "CampEnemyAttributeComponent.h"
+#include "Components/WidgetComponent.h"
 
 
 // Sets default values
@@ -38,6 +39,14 @@ ACampMeleeWeapon::ACampMeleeWeapon()
 	InteractSphere->OnComponentBeginOverlap.AddDynamic(this, &ACampMeleeWeapon::BeginInteractSphereOverlap);
 	InteractSphere->OnComponentEndOverlap.AddDynamic(this, &ACampMeleeWeapon::EndInteractSphereOverlap);
 
+	// Item icon defaults
+	Icon = CreateDefaultSubobject<UWidgetComponent>(TEXT("Icon"));
+	Icon->SetWidgetSpace(EWidgetSpace::Screen);
+	Icon->SetVisibility(false);
+	Icon->SetHiddenInGame(false);
+	Icon->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
+	Icon->SetupAttachment(GetRootComponent());
+
 	HolsterSocket = nullptr;
 	CombatSocket = nullptr;
 
@@ -56,6 +65,8 @@ ACampMeleeWeapon::ACampMeleeWeapon()
 void ACampMeleeWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Icon->SetWidgetClass(IconClass);
 }
 
 // Called every frame

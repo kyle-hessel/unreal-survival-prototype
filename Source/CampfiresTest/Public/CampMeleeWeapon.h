@@ -13,6 +13,8 @@ class UBoxComponent;
 class USphereComponent;
 class ACampCharacter;
 class ACampEnemyBase;
+class UWidgetComponent;
+class UUserWidget;
 
 UCLASS()
 class CAMPFIRESTEST_API ACampMeleeWeapon : public AActor, public ICampInteractionInterface
@@ -42,6 +44,12 @@ public:
 	TObjectPtr<const USkeletalMeshSocket> HolsterSocket;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Transform")
 	TObjectPtr<const USkeletalMeshSocket> CombatSocket;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
+	TObjectPtr<UWidgetComponent> Icon;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> IconClass;
 
 	// Getters
 	UFUNCTION(BlueprintPure)

@@ -12,6 +12,8 @@ class UCampInventoryComponent;
 class UBoxComponent;
 class APawn;
 class ACampCharacter;
+class UWidgetComponent;
+class UUserWidget;
 
 UCLASS()
 class CAMPFIRESTEST_API ACampBackpack : public AActor, public ICampInteractionInterface // Keep in mind CampBackpack is both an interactable and equipable object
@@ -30,6 +32,12 @@ class CAMPFIRESTEST_API ACampBackpack : public AActor, public ICampInteractionIn
 public:	
 	// Sets default values for this actor's properties
 	ACampBackpack();
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
+	TObjectPtr<UWidgetComponent> Icon;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UUserWidget> IconClass;
 
 	// Getters
 	UFUNCTION(BlueprintPure)

@@ -11,6 +11,7 @@
 #include "GameFramework/PawnMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 
 // Sets default values
@@ -28,12 +29,24 @@ ACampBackpack::ACampBackpack()
 	OffsetBox->SetCollisionProfileName("Equipable");
 	OffsetBox->SetCollisionObjectType(ECC_GameTraceChannel1);
 	OffsetBox->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	OffsetBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	OffsetBox->SetGenerateOverlapEvents(true);
 	// Configure the backpack's mesh (this is what the player sees)
 	BackpackMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BackpackMesh"));
 	BackpackMesh->SetupAttachment(OffsetBox);
 	BackpackMesh->SetCollisionProfileName("Equipable"); // Our custom Equipable profile, in the event we need to block against certain things later
 	BackpackMesh->SetCollisionObjectType(ECC_GameTraceChannel1); // This is 'Equipable' in the editor's collision menu: check defaultengine.ini to verify.
 	BackpackMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	BackpackMesh->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore); // Specifically setting this so that only the offset box is considered for item targeting.
+	BackpackMesh->SetGenerateOverlapEvents(true);
+
+	// Item icon defaults
+	Icon = CreateDefaultSubobject<UWidgetComponent>(TEXT("Icon"));
+	Icon->SetWidgetSpace(EWidgetSpace::Screen);
+	Icon->SetVisibility(false);
+	Icon->SetHiddenInGame(false);
+	Icon->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
+	Icon->SetupAttachment(GetRootComponent());
 
 	EnergyExpenditureModifier = 1.75f; // Bigger backpacks should have a higher value for this.
 	PreviousEnergyDelta = 0.0f; // Just a default.
@@ -43,6 +56,8 @@ ACampBackpack::ACampBackpack()
 void ACampBackpack::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Icon->SetWidgetClass(IconClass);
 
 	bIsEquipped = false;
 }

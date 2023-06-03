@@ -43,10 +43,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "EnhancedInput",
-			"Enabled": true
-		},
-		{
 			"Name": "Landmass",
 			"Enabled": true
 		},
