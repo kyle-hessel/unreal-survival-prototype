@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "CampInteractionComponent.generated.h"
 
+class ACampMeleeWeapon;
 class ACampItemBench;
 class AMyCampWorldUtilityItem;
 class ACampBackpack;
-class ACampCampsite;
 class ACampCharacter;
 class APlayerController;
 class UPrimitiveComponent;
@@ -23,9 +23,6 @@ class CAMPFIRESTEST_API UCampInteractionComponent final : public UActorComponent
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipables", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<ACampBackpack> HeldBackpack;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactables", meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<ACampCampsite> CurrentCampsite;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interactables", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<AMyCampWorldUtilityItem> CurrentUtilityItem;
@@ -48,18 +45,12 @@ public:
 	FORCEINLINE ACampBackpack* GetHeldBackpack() const { if (HeldBackpack) return HeldBackpack; return nullptr; }
 
 	UFUNCTION(BlueprintPure)
-	FORCEINLINE ACampCampsite* GetCurrentCampsite() const { if (CurrentCampsite) return CurrentCampsite; return nullptr; }
-
-	UFUNCTION(BlueprintPure)
 	FORCEINLINE AMyCampWorldUtilityItem* GetCurrentUtilityItem() const { if (CurrentUtilityItem) return CurrentUtilityItem; return nullptr; }
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE ACampItemBench* GetCurrentSittingItem() const { if (CurrentSittingItem) return CurrentSittingItem; return nullptr; }
 
 	// Setters
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE void SetCurrentCampsite(ACampCampsite* Campsite) { CurrentCampsite = Campsite; }
-
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetCurrentUtilityItem(AMyCampWorldUtilityItem* UtilityItem) { CurrentUtilityItem = UtilityItem; }
 

@@ -7,12 +7,9 @@
 #include "CampCharacter.h"
 #include "CampInteractionInterface.h"
 #include "CampInventoryComponent.h"
+#include "CampMeleeWeapon.h"
 #include "CampWorldItem.h"
 #include "DrawDebugHelpers.h"
-#include "MyCampWorldUtilityItem.h"
-#include "Components/WidgetComponent.h"
-#include "Engine/StaticMeshSocket.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
 UCampInteractionComponent::UCampInteractionComponent()
@@ -38,119 +35,39 @@ void UCampInteractionComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 // Triggered when interact key is pressed, checks for a collision with an interactable object and then decides what to do with said object.
 void UCampInteractionComponent::PrimaryInteract()
 {
-	// If the targeted object isn't a utility item, just pick it up.
-	if (ACampWorldItem* TargetedItem = CampCharacter->GetTargetedItem())
+	ACampWorldItem* TargetedItem = CampCharacter->GetTargetedItem();
+	AACampEquipable* TargetedEquipable = CampCharacter->GetTargetedEquipable();
+	APawn* OwningPawn = Cast<APawn>(GetOwner());
+
+	// This will always prioritize targeted items, and will not pick up an equipable until all items in range are picked up. I'll see how this feels for now.
+	if (TargetedItem)
 	{
-		// Nothing else needs to be done here; if an item is picked up, CampCharacter's EndItemSphereOverlap function is triggered which handles cleanup.
-		// Further, the inheritance hierarchy of utility items handles their own interactions. Yay for half decent code I wrote months ago!
-		if (Cast<APawn>(GetOwner())) ICampInteractionInterface::Execute_Interact(TargetedItem, Cast<APawn>(GetOwner()));
+		if (OwningPawn) ICampInteractionInterface::Execute_Interact(TargetedItem, OwningPawn);
 	}
-
-	
-	
-	/*
-	// *** OLD INTERACT CODE
-	// Set query parameters for collision trace
-	FCollisionObjectQueryParams ObjectQueryParams;
-
-	// Only look for equipables (isolated to GameTraceChannel1, check defaultengine.ini for clarity) if we don't have a backpack equipped.
-	if (HeldBackpack == nullptr)
+	else if (TargetedEquipable)
 	{
-		ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel1);
-	}
-
-	// Only look for melee weapons (isolated to GameTraceChannel2) if we don't have a melee weapon equipped.
-	if (CampCharacter->GetActiveMeleeWeapon() == nullptr)
-	{
-		ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel2);
-	}
-
-	// Always query for WorldStatic objects and Items regardless.
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_WorldStatic);//***TEMPORARY?
-	ObjectQueryParams.AddObjectTypesToQuery(ECC_GameTraceChannel4); // Items channel
-
-	// Store our owning character's eye location & rotation - start of collision trace
-	FVector EyeLocation;
-	FRotator EyeRotation;
-	GetOwner()->GetActorEyesViewPoint(EyeLocation, EyeRotation);
-
-	// Set end of line trace to the EyeLocation + EyeRotation converted to a directional vector, multiplied by an arbitrary amount to make it shoot forward.
-	FVector EndLoc = EyeLocation + (EyeRotation.Vector() * 200);
-
-	// Execute our collision trace and store the result in Hit.
-	FHitResult Hit;
-	
-	//bool bBlockingHit = GetWorld()->LineTraceSingleByObjectType(Hit, EyeLocation, EndLoc, ObjectQueryParams);
-	FCollisionShape SphereShape;
-	SphereShape.SetSphere(30.0f);
-	bool bBlockingHit = GetWorld()->SweepSingleByObjectType(Hit, EyeLocation, EndLoc, FQuat::Identity, ObjectQueryParams, SphereShape);
-
-	// If we hit an actor, store that from the component we hit, or the component itself.
-	HitActor = Hit.GetActor();
-	HitComponent = Hit.GetComponent();
-
-	if (HitActor) // If there is an owning actor on what we hit, which implies an owning component.
-	{
-		// If our HitActor implements our Interaction Interface, then...
-		if (HitActor->Implements<UCampInteractionInterface>())
+		// If the equipable is a backpack and the player isn't wearing one already, equip it.
+		if (TargetedEquipable->IsA(ACampBackpack::StaticClass()) && HeldBackpack == nullptr)
 		{
+			HeldBackpack = Cast<ACampBackpack>(TargetedEquipable);
+			// Close player inventory if backpack is equipped (this just sets the bool back, the below delegate actually closes it).
+			CampCharacter->GetCampInventoryComp()->bIsOpen = false;
 
-			// If our HitActor is of type ACampBackpack and we aren't already holding one, store that in a variable we can use later.
-			if (HeldBackpack == nullptr)
-			{
-				if (HitActor->IsA(ACampBackpack::StaticClass()))
-				{
-					HeldBackpack = Cast<ACampBackpack>(HitActor);
-					UE_LOG(LogTemp, Warning, TEXT("Casted AActor to ACampBackpack."));
-
-					// Close player inventory if backpack is equipped (this just sets the bool back, the below delegate actually closes it).
-					CampCharacter->GetCampInventoryComp()->bIsOpen = false;
-				}
-			}
-
-			// If item is a AMyCampWorldUtilityItem, (maybe do something in the future here lul)
-			//if (HitActor->IsA(AMyCampWorldUtilityItem::StaticClass()))
-			//{
-			//}
-			
-			// Lastly, call the interface's Interact function on the HitActor that we collided with during our trace,
-			// and pass in our owning Actor (casted to a Pawn) firing the trace as the Instigator.
-			if (Cast<APawn>(GetOwner())) ICampInteractionInterface::Execute_Interact(HitActor, Cast<APawn>(GetOwner()));
-
-			
-			// If our HitActor is of type CampWorldItem . . . (do this after calling the interface so that the item is already added)
-			if (HitActor->IsA(ACampWorldItem::StaticClass()))
-			{
-				TArray<FName> OutKeys;
-				CampCharacter->GetCampInventoryComp()->GetInventoryContentsKeys(OutKeys);
-
-				if (OutKeys.Num() > 0) UE_LOG(LogTemp, Display, TEXT("First item in inventory: %s"), *OutKeys[0].ToString());
-			}
+			// The below interface on equipables (in their respective classes) disables collision with WorldDynamic objects. This seems to trigger ...
+			// ACampCharacter's EndItemSphereOverlap, which also removes them from the array of NearbyEquipables.
+			if (OwningPawn) ICampInteractionInterface::Execute_Interact(TargetedEquipable, OwningPawn);
 		}
-		else
+
+		if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()) && CampCharacter->GetActiveMeleeWeapon() == nullptr)
 		{
-			// Also stop sitting even if we hit something that doesn't implement CampActionInterface.
-			if (CampCharacter->bSitting == true)
-			{
-				CampCharacter->StandUp();
-			}
+			if (OwningPawn) ICampInteractionInterface::Execute_Interact(TargetedEquipable, OwningPawn);
 		}
 	}
+	// In this case the player isn't targeting anything.
 	else
 	{
-		// Also stop sitting even if we don't hit anything.
-		if (CampCharacter->bSitting == true)
-		{
-			CampCharacter->StandUp();
-		}
+		UE_LOG(LogTemp, Warning, TEXT("No targeted items or equipables in range."));
 	}
-
-	//Debug information
-	FColor LineColor = bBlockingHit ? FColor:: Blue : FColor::Red;
-	
-	DrawDebugLine(GetWorld(), EyeLocation, EndLoc, LineColor, false, 3.0f, 0, 2.0f);
-	DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 30.0f, 32, LineColor, false, 3.0f, 0, 1.5f);
-	*/
 }
 
 // Called by CampCharacter when the Drop key is pressed.

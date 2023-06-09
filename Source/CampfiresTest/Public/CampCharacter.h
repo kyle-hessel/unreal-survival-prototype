@@ -121,10 +121,16 @@ public:
 	FORCEINLINE ACampWorldItem* GetTargetedItem() const { if (TargetedItem) return TargetedItem; return nullptr; }
 
 	UFUNCTION(BlueprintPure)
+	FORCEINLINE AACampEquipable* GetTargetedEquipable() const { if (TargetedEquipable) return TargetedEquipable; return nullptr; }
+
+	UFUNCTION(BlueprintPure)
 	FORCEINLINE TMap<ACampEnemyBase*, float> GetNearbyEnemies() const { return NearbyEnemies; }
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE TMap<ACampWorldItem*, float> GetNearbyItems() const { return NearbyItems; }
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE TMap<AACampEquipable*, float> GetNearbyEquipables() const { return NearbyEquipables; }
 
 	/*
 	 * Setters

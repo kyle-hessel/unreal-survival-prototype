@@ -22,6 +22,7 @@ ACampMeleeWeapon::ACampMeleeWeapon()
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetCollisionProfileName("MeleeWeapon");
 	WeaponMesh->SetCollisionObjectType(ECC_GameTraceChannel2);
+	WeaponMesh->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 	SetRootComponent(WeaponMesh);
 
 	Hitbox = CreateDefaultSubobject<UBoxComponent>(TEXT("Hitbox"));
@@ -91,8 +92,11 @@ void ACampMeleeWeapon::Interact_Implementation(APawn* InstigatorPawn)
 				{
 					// Stop player physics collision once equipped.
 					WeaponMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+					WeaponMesh->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore); // Disable item sphere overlap
 					CampCharacter->GetMesh()->SetCollisionResponseToChannel(ECC_GameTraceChannel2, ECR_Ignore);
 					HolsterSocket->AttachActor(this, CampCharacter->GetMesh());
+
+					Icon->SetVisibility(false);
 
 					bEquipped = true;
 					CampCharacter->bMeleeWeaponEquipped = bEquipped; // for animation?

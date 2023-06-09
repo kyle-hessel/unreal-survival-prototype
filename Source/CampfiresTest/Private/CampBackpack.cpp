@@ -28,7 +28,9 @@ ACampBackpack::ACampBackpack()
 	SetRootComponent(OffsetBox);
 	OffsetBox->SetCollisionProfileName("Equipable");
 	OffsetBox->SetCollisionObjectType(ECC_GameTraceChannel1);
+	OffsetBox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	OffsetBox->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	OffsetBox->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
 	OffsetBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	OffsetBox->SetGenerateOverlapEvents(true);
 	// Configure the backpack's mesh (this is what the player sees)
@@ -36,6 +38,7 @@ ACampBackpack::ACampBackpack()
 	BackpackMesh->SetupAttachment(OffsetBox);
 	BackpackMesh->SetCollisionProfileName("Equipable"); // Our custom Equipable profile, in the event we need to block against certain things later
 	BackpackMesh->SetCollisionObjectType(ECC_GameTraceChannel1); // This is 'Equipable' in the editor's collision menu: check defaultengine.ini to verify.
+	BackpackMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 	BackpackMesh->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	BackpackMesh->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore); // Specifically setting this so that only the offset box is considered for item targeting.
 	BackpackMesh->SetGenerateOverlapEvents(true);
@@ -71,7 +74,10 @@ void ACampBackpack::Interact_Implementation(APawn* InstigatorPawn)
 	{
 		// Set our backpack mesh to ignore pawns when equipped and our character to ignore equipables while holding one
 		BackpackMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+		OffsetBox->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Ignore); // Disable item sphere overlap
 		CampCharacter->GetMesh()->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Ignore);
+
+		Icon->SetVisibility(false);
 
 		// When we equip our bag, increase the rate at which we burn through energy.
 		if (UCampAttributeComponent* AttributeComp = CampCharacter->GetCampAttributeComp())
@@ -149,6 +155,7 @@ bool ACampBackpack::DropBackpack_Implementation()
 		
 			// Set collision profiles back to their original states on both the backpack mesh and the character's mesh so that the two are in agreement.
 			BackpackMesh->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
+			OffsetBox->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap); // Reactivate item sphere overlaps
 			CampCharacter->GetMesh()->SetCollisionResponseToChannel(ECC_GameTraceChannel1, ECR_Block);
 
 			// Set the character's energy consumption delta back to normal.
