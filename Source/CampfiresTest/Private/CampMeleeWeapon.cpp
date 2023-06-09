@@ -65,8 +65,6 @@ ACampMeleeWeapon::ACampMeleeWeapon()
 void ACampMeleeWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Icon->SetWidgetClass(IconClass);
 }
 
 // Called every frame

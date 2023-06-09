@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "CampCharacter.generated.h"
 
+class AACampEquipable;
 class USpringArmComponent;
 class UCameraComponent;
 class USphereComponent;
@@ -37,7 +38,7 @@ class CAMPFIRESTEST_API ACampCharacter : public ACharacter
 	TObjectPtr<ACampWorldItem> TargetedItem;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Interact", meta=(AllowPrivateAccess = "true"))
-	TObjectPtr<AActor> TargetedEquipable;
+	TObjectPtr<AACampEquipable> TargetedEquipable;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components | Attributes", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<UCampAttributeComponent> AttributeComp;
@@ -73,7 +74,7 @@ class CAMPFIRESTEST_API ACampCharacter : public ACharacter
 	TMap<ACampWorldItem*, float> NearbyItems;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Interact", meta=(AllowPrivateAccess = "true"))
-	TMap<AActor*, float> NearbyEquipables; // This includes weapons as well, using equipables as a general term here contrary to collision layers, since the usage is a bit different.
+	TMap<AACampEquipable*, float> NearbyEquipables; // This includes weapons as well, using equipables as a general term here contrary to collision layers, since the usage is a bit different.
 
 	UPROPERTY(BlueprintReadOnly, Category = "Combat", meta=(AllowPrivateAccess = "true"))
 	TObjectPtr<ACampEnemyBase> LockedOnEnemy;

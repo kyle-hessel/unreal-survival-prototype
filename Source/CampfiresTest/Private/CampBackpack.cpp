@@ -50,16 +50,13 @@ ACampBackpack::ACampBackpack()
 
 	EnergyExpenditureModifier = 1.75f; // Bigger backpacks should have a higher value for this.
 	PreviousEnergyDelta = 0.0f; // Just a default.
+	bEquipped = false;
 }
 
 // Called when the game starts or when spawned
 void ACampBackpack::BeginPlay()
 {
 	Super::BeginPlay();
-
-	Icon->SetWidgetClass(IconClass);
-
-	bIsEquipped = false;
 }
 
 // Trigger an event when the player (or something else) interacts with the backpack
@@ -83,7 +80,7 @@ void ACampBackpack::Interact_Implementation(APawn* InstigatorPawn)
 			AttributeComp->DefaultEnergyDelta *= EnergyExpenditureModifier;
 		}
 
-		bIsEquipped = true; // Mark that this backpack is equipped. Used for some checks in other places.
+		bEquipped = true; // Mark that this backpack is equipped. Used for some checks in other places.
 
 
 		// Store CampCharacter's BackpackSlot socket in a temporary variable and attach this actor to it.
@@ -137,7 +134,7 @@ bool ACampBackpack::DropBackpack_Implementation()
 			DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 			
 			// Mark bag as unequipped.
-			if (bIsEquipped) bIsEquipped = false;
+			if (bEquipped) bEquipped = false;
 			UE_LOG(LogTemp, Warning, TEXT("Dropped backpack!"));
 
 			// Set an offset so the backpack appears above-ground.

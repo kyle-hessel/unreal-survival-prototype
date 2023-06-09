@@ -25,6 +25,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "ACampEquipable.h"
 
 // Sets default values
 ACampCharacter::ACampCharacter()
@@ -399,58 +400,28 @@ void ACampCharacter::BeginItemSphereOverlap(UPrimitiveComponent* OverlappedComp,
 	// Equipables (backpacks, weapons)
 	else
 	{
-		if (OtherActor->IsA(ACampBackpack::StaticClass()) || OtherActor->IsA(ACampMeleeWeapon::StaticClass()))
+		if (OtherActor->IsA(AACampEquipable::StaticClass()))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Equipable!"));
-			NearbyEquipables.Add(OtherActor);
+			AACampEquipable* NearbyEquipable = Cast<AACampEquipable>(OtherActor);
+			NearbyEquipables.Add(NearbyEquipable);
 
 			if (NearbyEquipables.Num() <= 1)
 			{
-				TargetedEquipable = OtherActor;
-				if (OtherActor->IsA(ACampBackpack::StaticClass()))
-				{
-					ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(OtherActor);
-					TargetedBackpack->Icon->SetVisibility(true);
-				}
-				else if (OtherActor->IsA(ACampMeleeWeapon::StaticClass()))
-				{
-					ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(OtherActor);
-					TargetedWeapon->Icon->SetVisibility(true);
-				}
+				TargetedEquipable = NearbyEquipable;
+				TargetedEquipable->Icon->SetVisibility(true);
 			}
 			else
 			{
 				SortNearbyEquipablesByDistance();
-				TArray<AActor*> NearbyEquipablesKeys;
+				TArray<AACampEquipable*> NearbyEquipablesKeys;
 				NearbyEquipables.GenerateKeyArray(NearbyEquipablesKeys);
-
-				// There's a lot of redundant ifs here, don't overthink it. Has to do with accompanying for this array holding EITHER a backpack type or a melee weapon type.
-				// If later I made all of these children of one overarching parent equipable class, this would be a lot cleaner (and I should probably do that!)
+				
 				if (TargetedEquipable != NearbyEquipablesKeys[0])
 				{
-					if (TargetedEquipable->IsA(ACampBackpack::StaticClass()))
-					{
-						ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(TargetedEquipable);
-						TargetedBackpack->Icon->SetVisibility(false);
-					}
-					else if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()))
-					{
-						ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(TargetedEquipable);
-						TargetedWeapon->Icon->SetVisibility(false);
-					}
-
+					TargetedEquipable->Icon->SetVisibility(false);
 					TargetedEquipable = NearbyEquipablesKeys[0];
-
-					if (TargetedEquipable->IsA(ACampBackpack::StaticClass()))
-					{
-						ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(TargetedEquipable);
-						TargetedBackpack->Icon->SetVisibility(true);
-					}
-					else if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()))
-					{
-						ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(TargetedEquipable);
-						TargetedWeapon->Icon->SetVisibility(true);
-					}
+					TargetedEquipable->Icon->SetVisibility(true);
 				}
 			}
 		}
@@ -486,41 +457,22 @@ void ACampCharacter::EndItemSphereOverlap(UPrimitiveComponent* OverlappedComp, A
 	// Equipables (backpacks, weapons)
 	else
 	{
-		if (OtherActor->IsA(ACampBackpack::StaticClass()) || OtherActor->IsA(ACampMeleeWeapon::StaticClass()))
+		if (OtherActor->IsA(AACampEquipable::StaticClass()))
 		{
-			NearbyEquipables.Remove(OtherActor);
-
-			// Same as the above function, all this could be cleaner (and should be) in the future with the right inheritance hierarchy.
-			if (OtherActor == TargetedEquipable)
+			AACampEquipable* ExitingEquipable = Cast<AACampEquipable>(OtherActor);
+			NearbyEquipables.Remove(ExitingEquipable);
+			
+			if (ExitingEquipable == TargetedEquipable)
 			{
-				if (TargetedEquipable->IsA(ACampBackpack::StaticClass()))
-				{
-					ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(TargetedEquipable);
-					TargetedBackpack->Icon->SetVisibility(false);
-				}
-				else if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()))
-				{
-					ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(TargetedEquipable);
-					TargetedWeapon->Icon->SetVisibility(false);
-				}
+				TargetedEquipable->Icon->SetVisibility(false);
 
 				if (NearbyEquipables.Num() > 0)
 				{
 					SortNearbyEquipablesByDistance();
-					TArray<AActor*> NearbyEquipablesKeys;
+					TArray<AACampEquipable*> NearbyEquipablesKeys;
 					NearbyEquipables.GenerateKeyArray(NearbyEquipablesKeys);
 					TargetedEquipable = NearbyEquipablesKeys[0];
-
-					if (TargetedEquipable->IsA(ACampBackpack::StaticClass()))
-					{
-						ACampBackpack* TargetedBackpack = Cast<ACampBackpack>(TargetedEquipable);
-						TargetedBackpack->Icon->SetVisibility(true);
-					}
-					else if (TargetedEquipable->IsA(ACampMeleeWeapon::StaticClass()))
-					{
-						ACampMeleeWeapon* TargetedWeapon = Cast<ACampMeleeWeapon>(TargetedEquipable);
-						TargetedWeapon->Icon->SetVisibility(true);
-					}
+					TargetedEquipable->Icon->SetVisibility(true);
 				}
 				else
 				{
@@ -567,7 +519,7 @@ void ACampCharacter::SortNearbyEquipablesByDistance()
 		FVector PlayerLocLateral = FVector(GetActorLocation().X, GetActorLocation().Y, 0.f);
 		FVector DistanceToItemVec = EquipableLocLateral - PlayerLocLateral;
 		const float DistanceToEquipable = DistanceToItemVec.Length();
-		UE_LOG(LogTemp, Display, TEXT("Distance to item: %f"), DistanceToEquipable);
+		UE_LOG(LogTemp, Display, TEXT("Distance to equipable: %f"), DistanceToEquipable);
 		
 		Equipable.Value = DistanceToEquipable;
 	}
@@ -581,7 +533,7 @@ void ACampCharacter::SortNearbyEquipablesByDistance()
 	// *** DEBUG ONLY, comment out later
 	for (auto& Equipable : NearbyEquipables)
 	{
-		UE_LOG(LogTemp, Display, TEXT("New item distance: %f"), Equipable.Value);
+		UE_LOG(LogTemp, Display, TEXT("New equipable distance: %f"), Equipable.Value);
 	}
 }
 

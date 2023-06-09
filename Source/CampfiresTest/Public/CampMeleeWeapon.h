@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ACampEquipable.h"
 #include "CampInteractionInterface.h"
 #include "GameFramework/Actor.h"
 #include "CampMeleeWeapon.generated.h"
@@ -13,11 +14,9 @@ class UBoxComponent;
 class USphereComponent;
 class ACampCharacter;
 class ACampEnemyBase;
-class UWidgetComponent;
-class UUserWidget;
 
 UCLASS()
-class CAMPFIRESTEST_API ACampMeleeWeapon : public AActor, public ICampInteractionInterface
+class CAMPFIRESTEST_API ACampMeleeWeapon : public AACampEquipable, public ICampInteractionInterface
 {
 	GENERATED_BODY()
 
@@ -45,21 +44,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Transform")
 	TObjectPtr<const USkeletalMeshSocket> CombatSocket;
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
-	TObjectPtr<UWidgetComponent> Icon;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> IconClass;
-
 	// Getters
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE ACampEnemyBase* GetReceivingEnemy() const { if (ReceivingEnemy) return ReceivingEnemy; return nullptr; }
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UBoxComponent* GetHitbox() const { return Hitbox; }
-
-	UPROPERTY(BlueprintReadOnly)
-	bool bEquipped;
+	
 	UPROPERTY(BlueprintReadOnly)
 	bool bInCombat;
 

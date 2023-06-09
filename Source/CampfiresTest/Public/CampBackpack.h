@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ACampEquipable.h"
 #include "CampInteractionInterface.h"
 #include "GameFramework/Actor.h"
 #include "CampBackpack.generated.h"
@@ -12,11 +13,9 @@ class UCampInventoryComponent;
 class UBoxComponent;
 class APawn;
 class ACampCharacter;
-class UWidgetComponent;
-class UUserWidget;
 
 UCLASS()
-class CAMPFIRESTEST_API ACampBackpack : public AActor, public ICampInteractionInterface // Keep in mind CampBackpack is both an interactable and equipable object
+class CAMPFIRESTEST_API ACampBackpack : public AACampEquipable, public ICampInteractionInterface // Keep in mind CampBackpack is both an interactable and equipable object
 {
 	GENERATED_BODY()
 
@@ -33,12 +32,6 @@ public:
 	// Sets default values for this actor's properties
 	ACampBackpack();
 
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
-	TObjectPtr<UWidgetComponent> Icon;
-
-	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UUserWidget> IconClass;
-
 	// Getters
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE ACampCharacter* GetOwningCharacter() const { return CampCharacter; }
@@ -49,9 +42,6 @@ public:
 	// Setters
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE void SetOwningCharacter(ACampCharacter* Character) { CampCharacter = Character; }
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
-	bool bIsEquipped;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	float EnergyExpenditureModifier;
