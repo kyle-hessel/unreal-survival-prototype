@@ -9,6 +9,7 @@ public class CampfiresTestEditorTarget : TargetRules
 	{
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		Type = TargetType.Editor;
+		bOverrideBuildEnvironment = true;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "CampfiresTest" } );
 	}

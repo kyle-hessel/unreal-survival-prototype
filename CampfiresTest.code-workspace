@@ -6,19 +6,860 @@
 		},
 		{
 			"name": "UE5",
-			"path": "/home/pollutedmind/Software/Unreal Engine/5.2.0"
+			"path": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
 		}
 	],
 	"settings": {
-		"typescript.tsc.autoDetect": "off"
+		"typescript.tsc.autoDetect": "off",
+		"npm.autoDetect": "off"
 	},
 	"extensions": {
 		"recommendations": [
 			"ms-vscode.cpptools",
-			"ms-dotnettools.csharp",
-			"vadimcn.vscode-lldb",
-			"ms-vscode.mono-debug",
-			"dfarley1.file-picker"
+			"ms-dotnettools.csharp"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "CampfiresTest Linux Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest Linux Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest Linux DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest Linux Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Test",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Test",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest Linux Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Test",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Shipping",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Shipping",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest Linux Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest Linux Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"Linux",
+					"Shipping",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest LinuxArm64 Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest LinuxArm64 DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest LinuxArm64 Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Test Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Test",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Test Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Test",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest LinuxArm64 Test Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Test Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Test",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Shipping Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Shipping",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Shipping Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Shipping",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTest LinuxArm64 Shipping Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTest LinuxArm64 Shipping Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTest",
+					"LinuxArm64",
+					"Shipping",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux Debug Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux Debug Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTestEditor Linux Debug Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux Debug Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"Debug",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux DebugGame Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux DebugGame Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTestEditor Linux DebugGame Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux DebugGame Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"DebugGame",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux Development Build",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux Development Rebuild",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex"
+				],
+				"problemMatcher": "$msCompile",
+				"dependsOn": [
+					"CampfiresTestEditor Linux Development Clean"
+				],
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			},
+			{
+				"label": "CampfiresTestEditor Linux Development Clean",
+				"group": "build",
+				"command": "Engine/Build/BatchFiles/Linux/Build.sh",
+				"args": [
+					"CampfiresTestEditor",
+					"Linux",
+					"Development",
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-waitmutex",
+					"-clean"
+				],
+				"problemMatcher": "$msCompile",
+				"type": "shell",
+				"options": {
+					"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+				}
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Launch CampfiresTest (Debug)",
+				"request": "launch",
+				"program": "/home/pollutedmind/Projects/Gamedev/Campfires/Binaries/Linux/UnrealGame-Linux-Debug",
+				"preLaunchTask": "CampfiresTest Linux Debug Build",
+				"args": [
+				],
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0",
+				"type": "cppdbg",
+				"visualizerFile": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch CampfiresTest (DebugGame)",
+				"request": "launch",
+				"program": "/home/pollutedmind/Projects/Gamedev/Campfires/Binaries/Linux/UnrealGame-Linux-DebugGame",
+				"preLaunchTask": "CampfiresTest Linux DebugGame Build",
+				"args": [
+				],
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0",
+				"type": "cppdbg",
+				"visualizerFile": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch CampfiresTest (Development)",
+				"request": "launch",
+				"program": "/home/pollutedmind/Projects/Gamedev/Campfires/Binaries/Linux/UnrealGame",
+				"preLaunchTask": "CampfiresTest Linux Development Build",
+				"args": [
+				],
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0",
+				"type": "cppdbg",
+				"visualizerFile": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch CampfiresTest (Test)",
+				"request": "launch",
+				"program": "/home/pollutedmind/Projects/Gamedev/Campfires/Binaries/Linux/UnrealGame-Linux-Test",
+				"preLaunchTask": "CampfiresTest Linux Test Build",
+				"args": [
+				],
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0",
+				"type": "cppdbg",
+				"visualizerFile": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch CampfiresTest (Shipping)",
+				"request": "launch",
+				"program": "/home/pollutedmind/Projects/Gamedev/Campfires/Binaries/Linux/UnrealGame-Linux-Shipping",
+				"preLaunchTask": "CampfiresTest Linux Shipping Build",
+				"args": [
+				],
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0",
+				"type": "cppdbg",
+				"visualizerFile": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch CampfiresTestEditor (Debug)",
+				"request": "launch",
+				"program": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Binaries/Linux/UnrealEditor-Linux-Debug",
+				"preLaunchTask": "CampfiresTestEditor Linux Debug Build",
+				"args": [
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject"
+				],
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0",
+				"type": "cppdbg",
+				"visualizerFile": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch CampfiresTestEditor (DebugGame)",
+				"request": "launch",
+				"program": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Binaries/Linux/UnrealEditor-Linux-DebugGame",
+				"preLaunchTask": "CampfiresTestEditor Linux DebugGame Build",
+				"args": [
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject"
+				],
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0",
+				"type": "cppdbg",
+				"visualizerFile": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Launch CampfiresTestEditor (Development)",
+				"request": "launch",
+				"program": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Binaries/Linux/UnrealEditor",
+				"preLaunchTask": "CampfiresTestEditor Linux Development Build",
+				"args": [
+					"/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject"
+				],
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0",
+				"type": "cppdbg",
+				"visualizerFile": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Extras/VisualStudioDebugging/Unreal.natvis",
+				"showDisplayString": true
+			},
+			{
+				"name": "Generate Project Files",
+				"type": "coreclr",
+				"request": "launch",
+				"preLaunchTask": "UnrealBuildTool Linux Development Build",
+				"program": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0/Engine/Build/BatchFiles/RunUBT.bat",
+				"args": [
+					"-projectfiles",
+					"-vscode",
+					"-project=/home/pollutedmind/Projects/Gamedev/Campfires/CampfiresTest.uproject",
+					"-game",
+					"-engine",
+					"-dotnet"
+				],
+				"console": "internalConsole",
+				"internalConsoleOptions": "openOnSessionStart",
+				"stopAtEntry": false,
+				"cwd": "/opt/UnrealEngine/Linux_Unreal_Engine_5.4.0"
+			}
 		]
 	}
 }

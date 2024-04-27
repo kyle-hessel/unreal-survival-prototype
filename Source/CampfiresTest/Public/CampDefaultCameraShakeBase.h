@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "DefaultCameraShakeBase.h"
+#include "Camera/CameraShakeBase.h"
 #include "CampDefaultCameraShakeBase.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CAMPFIRESTEST_API UCampDefaultCameraShakeBase : public UDefaultCameraShakeBase
+class CAMPFIRESTEST_API UCampDefaultCameraShakeBase : public UCameraShakeBase
 {
 	GENERATED_BODY()
 	

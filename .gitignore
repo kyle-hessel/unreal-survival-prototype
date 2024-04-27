@@ -16,3 +16,4 @@ Content/__ExternalActors__
 *.suo
 *.xcodeproj
 *.xcworkspace
+Makefile
