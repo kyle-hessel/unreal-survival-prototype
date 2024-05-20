@@ -236,7 +236,7 @@ bool UCampInventoryComponent::DragItemOutOfInventory(FName ItemNameAndNumber, FN
 	}
 
 	// Return false if nothing else evaluated already.
-	return false;
+	//return false;
 }
 
 // Spawns a given item on the ground. Usually used when dropping items from inventory.
